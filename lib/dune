@@ -1,2 +1,3 @@
 (library
- (name cs_final))
+ (name cs_final)
+ (modules_without_implementation pet))
