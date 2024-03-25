@@ -12,6 +12,8 @@ val create : string -> string -> animal
 
 val to_string : animal -> string
 [@@warning "-32"]
+
+val options : string list
 (** [to_string p] converts the pet [p] to the string format with fields of pet record. 
     For example: if user_pet = Camel {name = "Carly"; health = 6; money = 17.}, 
       then to_string user_pet yields "Camel Carly has 6/10 health and $17.00"*)

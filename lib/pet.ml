@@ -25,3 +25,5 @@ let to_string (p : animal) : string =
   | Dog { name = n; health = h; money = m } ->
       "Dog " ^ n ^ " has " ^ string_of_int h ^ "/10 health and $"
       ^ string_of_float m
+
+let options = ["Feed"; "Walk"; "Play"; "Clean"; "Nap"; "Competition"; "Shop"; "END GAME"]
