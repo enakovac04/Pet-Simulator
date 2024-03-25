@@ -25,4 +25,6 @@ let game_output () =
   game_start ();
   game_select_animal ()
 
-let () = game_output ()
+let () =
+  game_output ();
+  print_endline "Hello"
