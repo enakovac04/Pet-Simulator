@@ -26,19 +26,28 @@ let create_camel () =
 
 let decrease_health animal amount =
   match animal with
-  | Pet.Camel {name; health; money} -> 
-      Pet.Camel {name; health = health - amount; money}
-  | Pet.Dog {name; health; money} -> 
-      Pet.Dog {name; health = health - amount; money}
+  | Pet.Camel {name; health; money} ->
+      let new_health = health - amount in
+      if new_health <= 0 then 
+        (print_endline "Your camel reached 0 health, and has passd away."; exit 0)
+      else
+        Pet.Camel {name; health = new_health; money}
+  | Pet.Dog {name; health; money} ->
+      let new_health = health - amount in
+      if new_health <= 0 then 
+        (print_endline "Your dog reached 0 health, and has passed away"; exit 0)
+      else
+        Pet.Dog {name; health = new_health; money}
+
 
 let rec feed animal = 
   let name = Pet.get_name animal in  
   Printf.printf "Choose what food to feed %s: Chocolate Grapes Cheese Pork Fish\n" name;
   let food = read_line () in
   match food, animal with
-  | "Chocolate", Pet.Dog _ -> print_endline "Your dog ate chocolate and got sick. Minus 2 health"; decrease_health animal 2
+  | "Chocolate", Pet.Dog _ -> print_endline "Your dog ate chocolate and got sick. Minus 2 health."; decrease_health animal 2
   | "Chocolate", _ -> print_endline "Luckily, your pet can eat chocolate safely."; animal
-  | "Grapes", Pet.Dog _ -> print_endline "Your dog ate grapes and got sick. Minus 2 health"; decrease_health animal 2
+  | "Grapes", Pet.Dog _ -> print_endline "Your dog ate grapes and got sick. Minus 2 health."; decrease_health animal 2
   | "Grapes", _ -> print_endline "Luckily, your pet can eat grapes safely."; animal
   | "Cheese", _ -> print_endline "Your pet enjoyed the cheese."; animal
   | "Pork", _ -> print_endline "Your pet enjoyed the pork."; animal
@@ -81,6 +90,5 @@ let game_output () =
   let animal = game_select_animal () in
   print_endline (Pet.status_to_string animal);
   options animal
-
 
 let () = game_output ()
