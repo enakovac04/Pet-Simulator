@@ -1,17 +1,34 @@
-type pet [@@warning "-32"]
+type pet = {
+  name : string;
+  health : int;
+  money : float;
+}
+[@@warning "-32"]
+
 (** [pet] is the pet of type [animal] with identifier [name], [health] status
     out of 10 where 0 means dead and 10 means perfect health, and amount of
     [money] in USD *)
 
-type animal [@@warning "-32"]
+type animal =
+  | Camel of pet
+  | Dog of pet
+  
 (** [animal] represents the type of pet *)
 
 val create : string -> string -> animal
 [@@warning "-32"]
 (** [create] makes a new pet *)
 
-val to_string : animal -> string
+val status_to_string : animal -> string
 [@@warning "-32"]
+
+val get_name : animal -> string
+
+val options : string list
+[@@warning "-32"]
+
+val to_string : animal -> string
+
 
 val options : string list
 (** [to_string p] converts the pet [p] to the string format with fields of pet record. 

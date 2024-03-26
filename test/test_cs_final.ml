@@ -3,7 +3,7 @@ open Cs_final
 open Pet
 
 let test_pet name (input : animal) expected_output =
-  name >:: fun _ -> assert_equal expected_output (to_string input)
+  name >:: fun _ -> assert_equal expected_output (status_to_string input)
 
 let tests =
   " Testing Myset functions with Txtfileset"

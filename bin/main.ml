@@ -19,31 +19,51 @@ let display_options options =
   let options_string = String.concat ", " options in
   Printf.printf "What would you like to do next? %s\n" options_string
 
-let rec options () = 
+let create_camel () =
+  let () = print_string "What would you like to name your Camel: " in
+  let name_of_camel = read_line () in
+  Pet.create name_of_camel "Camel"
+
+let decrease_health animal amount =
+  match animal with
+  | Pet.Camel {name; health; money} -> 
+      Pet.Camel {name; health = health - amount; money}
+  | Pet.Dog {name; health; money} -> 
+      Pet.Dog {name; health = health - amount; money}
+
+let rec feed animal = 
+  let name = Pet.get_name animal in  
+  Printf.printf "Choose what food to feed %s: Chocolate Grapes Cheese Pork Fish\n" name;
+  let food = read_line () in
+  match food, animal with
+  | "Chocolate", Pet.Dog _ -> print_endline "Your dog ate chocolate and got sick. Minus 2 health"; decrease_health animal 2
+  | "Chocolate", _ -> print_endline "Luckily, your pet can eat chocolate safely."; animal
+  | "Grapes", Pet.Dog _ -> print_endline "Your dog ate grapes and got sick. Minus 2 health"; decrease_health animal 2
+  | "Grapes", _ -> print_endline "Luckily, your pet can eat grapes safely."; animal
+  | "Cheese", _ -> print_endline "Your pet enjoyed the cheese."; animal
+  | "Pork", _ -> print_endline "Your pet enjoyed the pork."; animal
+  | "Fish", _ -> print_endline "Your pet enjoyed the fish."; animal
+  | _, _ -> print_endline "Not one of the options"; feed animal
+
+let rec options animal = 
   display_options Pet.options;
   let choice = read_line () in 
   match choice with
   | choice when List.mem choice Pet.options ->
     begin match choice with
-    | "Feed" -> print_endline " "
-    | "Walk" -> print_endline " "
-    | "Play" -> print_endline " "
-    | "Clean" -> print_endline " "
-    | "Nap" -> print_endline " "
-    | "Competition" -> print_endline " "
-    | "Shop" -> print_endline " "
+    | "Feed" -> let updated_animal = feed animal in options updated_animal
+    | "Walk" -> options animal
+    | "Play" -> options animal
+    | "Clean" -> options animal
+    | "Nap" -> options animal
+    | "Competition" -> options animal
+    | "Shop" -> options animal
     | "END GAME" -> print_endline "Thank you for playing Pet Simulator. Goodbye!"; exit 0
     | _ -> ()
     end;
-    options ()
   | _ -> 
     print_endline "Invalid option, please try again."; 
-    options ()
-
-let create_camel () =
-  let () = print_string "What would you like to name your Camel: " in
-  let name_of_camel = read_line () in
-  Pet.create name_of_camel "Camel"
+    options animal
 
 let rec game_select_animal () =
   let () =
@@ -59,7 +79,8 @@ let rec game_select_animal () =
 let game_output () =
   game_start ();
   let animal = game_select_animal () in
-  print_endline (Pet.to_string animal);
-  options ()
+  print_endline (Pet.status_to_string animal);
+  options animal
+
 
 let () = game_output ()
