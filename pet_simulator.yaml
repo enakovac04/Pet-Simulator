@@ -1,0 +1,31 @@
+---
+# Members of your group.
+group:
+  - name: Bella Falkenberg
+    netid: alf253
+  - name: Megan Cowart
+    netid: mec328
+  - name: Ena Kovac
+    netid: ehk75
+  - name: Claire McHugh
+    netid: cdm234
+# Your PM.
+pm:
+  name: Rachael Close
+  netid: rlc355
+# Set to false if you don't want your gallery entry to be public.
+publish: true
+# Pithy title
+title: "Pet Simulator"
+# OK if this is a Cornell Github link, but public gallery viewers won't be able to see it.
+git-repo: "https://github.coecis.cornell.edu/ehk75/cs_final"
+# If you have no demo screencast, replace the url string with an empty string ""
+demo-video-url: ""
+# Write a short, attention-grabbing description of your project.
+desc: >
+  Our project is a pet simulator. It supports different pet types and allows the 
+  user to take care of their chosen pet. They can participate in a variety of 
+  activities to keep their pet happy, healthy, and energized. These activities
+  include, but are not limited to, feeding your pet, playing with your pet, and
+  training your pet. If you are not careful, your pet will die, so this simulator
+  requires your full attention.

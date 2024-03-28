@@ -1,7 +1,10 @@
 type pet = {
   name : string;
-  health : int;
-  money : float;
+  mutable health : int;
+  mutable happiness : int;
+  mutable energy : int;
+  mutable nutrition : int;
+  mutable money : float;
 }
 [@@warning "-32"]
 
@@ -28,6 +31,32 @@ val options : string list
 [@@warning "-32"]
 
 val to_string : animal -> string
+
+val health_to_string : animal -> string
+(** [health_to_string] returns a string noting the amount of health the pet has *)
+
+val happiness_to_string : animal -> string
+(** [happiness_to_string] returns a string noting the amount of happiness the pet has *)
+
+val energy_to_string : animal -> string
+(** [energy_to_string] returns a string noting the amount of energy the pet has *)
+
+val nutrition_to_string : animal -> string
+(** [nutrition_to_string] returns a string noting the amount of nutrition the pet has *)
+
+val money_to_string : animal -> string
+(** [money_to_string] returns a string noting the amount of money the pet has *)
+
+val decrease_health : animal -> int -> unit
+(** [decrease_health] modifies the health of the animal by decreasing it by [amount]
+    If the health falls below 0, it is set as 0 *)
+
+val increase_health : animal -> int -> unit
+(** [increase_health] modifies the health of the animal by increasing it by [amount]
+    If the health falls above the max health, it is set as the max *)
+
+val get_health : animal -> int
+(** [get_health] returns the amount of health the pet has *)
 
 
 val options : string list
