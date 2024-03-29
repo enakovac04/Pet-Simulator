@@ -1,0 +1,4 @@
+Follow the download instructions for CS 3110. 
+Navigate to the correct directory using cd commands in the terminal. 
+Run dune exec bin/main.exe to start the simulator. 
+The simulator will give you prompts on how to continue. 
