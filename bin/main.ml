@@ -108,6 +108,32 @@ let rec walk animal =
       Printf.printf "That's not a valid walking option. Please choose again.\n";
       walk animal
 
+let rec clean animal =
+  let name = Pet.get_name animal in
+  Printf.printf "How would you like to clean %s? Options: Bath, Dry Shampoo, Brush\n" name;
+  let methods = read_line () in
+  match methods, animal with
+  | "Bath", Pet.Dog _ ->
+      Pet.increase_happiness animal 2;  (* Dogs generally enjoy baths *)
+      Pet.increase_health animal 1;     (* Cleaning can boost health *)
+      Printf.printf "%s enjoyed the bath and feels refreshed!\n" name;
+  | "Bath", Pet.Camel _ ->
+      Pet.decrease_happiness animal 1;  (* Camels may not enjoy baths as much *)
+      Pet.increase_health animal 1;
+      Printf.printf "Bathing %s was challenging but necessary.\n" name;
+  | "Dry Shampoo", Pet.Dog _ ->
+      Pet.increase_happiness animal 1;  (* Less enjoyable than a bath *)
+      Printf.printf "%s feels cleaner with dry shampoo.\n" name
+  | "Dry Shampoo", Pet.Camel _ ->
+      Pet.increase_happiness animal 2;  (* More practical and enjoyable for a camel *)
+      Printf.printf "%s appreciates the quick clean!\n" name;
+  | "Brush", _ ->
+      Pet.increase_happiness animal 1;  (* Both animals enjoy brushing *)
+      Printf.printf "%s loves being brushed and looks great!\n" name;
+  | _, _ ->
+      Printf.printf "That's not a valid cleaning option. Please choose again.\n";
+      clean animal
+
 let rec options animal = 
   display_options Pet.options;
   let choice = read_line () in 
@@ -117,7 +143,7 @@ let rec options animal =
     | "Feed" -> feed animal; options animal
     | "Walk" -> walk animal; options animal
     | "Play" -> let updated_animal = play animal in options updated_animal
-    | "Clean" -> options animal
+    | "Clean" -> clean animal; options animal
     | "Nap" -> options animal
     | "Train" -> options animal
     | "Competition" -> options animal
