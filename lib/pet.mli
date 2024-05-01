@@ -58,6 +58,11 @@ val increase_health : animal -> int -> unit
 val get_health : animal -> int
 (** [get_health] returns the amount of health the pet has *)
 
+val increase_happiness : animal -> int -> unit
+val decrease_happiness : animal -> int -> unit
+val increase_energy : animal -> int -> unit
+val decrease_energy : animal -> int -> unit
+
 
 val options : string list
 (** [to_string p] converts the pet [p] to the string format with fields of pet record. 

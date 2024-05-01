@@ -78,7 +78,31 @@ let get_health animal =
   match animal with
   | Dog d -> d.health
   | Camel c -> c.health
-  
+
+(* Function to increase happiness with a maximum limit of 10 *)
+let increase_happiness animal amount =
+  match animal with
+  | Dog d -> d.happiness <- min (d.happiness + amount) 10
+  | Camel c -> c.happiness <- min (c.happiness + amount) 10
+
+(* Function to decrease happiness with a minimum limit of 0 *)
+let decrease_happiness animal amount =
+  match animal with
+  | Dog d -> d.happiness <- max (d.happiness - amount) 0
+  | Camel c -> c.happiness <- max (c.happiness - amount) 0
+
+(* Function to increase energy with a maximum limit of 10 *)
+let increase_energy animal amount =
+  match animal with
+  | Dog d -> d.energy <- min (d.energy + amount) 10
+  | Camel c -> c.energy <- min (c.energy + amount) 10
+
+(* Function to decrease energy with a minimum limit of 0 *)
+let decrease_energy animal amount =
+  match animal with
+  | Dog d -> d.energy <- max (d.energy - amount) 0
+  | Camel c -> c.energy <- max (c.energy - amount) 0
+
 let options = ["Feed"; "Walk"; "Play"; "Clean"; "Nap"; "Train"; "Competition"; "Shop"; "END GAME"]
 
 let get_name animal =

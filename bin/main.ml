@@ -70,14 +70,52 @@ let rec play animal =
   | "Trash", _ -> print_endline (name ^ " did not like the toy"); animal
   | _, _ -> print_endline "Not one of the options"; play animal
 
+let rec walk animal =
+  let name = Pet.get_name animal in  
+  Printf.printf "Where would you like to walk %s? Options: Park, Street, Desert, Swim\n" name;
+  let location = read_line () in
+  match location, animal with
+  | "Park", Pet.Dog _ ->
+      Pet.increase_happiness animal 2;
+      Pet.decrease_energy animal 1;
+      Printf.printf "%s enjoyed a lovely walk in the park.\n" name;
+  | "Park", Pet.Camel _ ->
+      Pet.decrease_energy animal 2;
+      Printf.printf "You got strange looks for bringing a %s to a park. \n" name;
+  | "Street", _ ->
+      Pet.increase_happiness animal 1;
+      Pet.decrease_energy animal 1;
+      Printf.printf "%s had a nice time walking on the street.\n" name;
+  | "Desert", Pet.Dog _ ->
+      Pet.decrease_health animal 2;
+      Pet.decrease_energy animal 2;
+      Printf.printf "%s found the desert walk challenging and feels tired.\n" name;
+  | "Desert", Pet.Camel _ ->
+      Pet.decrease_health animal 2;
+      Pet.increase_energy animal 2;
+      Printf.printf "%s found the desert walk refreshing and feels energized.\n" name;
+  | "Swim", Pet.Dog _ ->
+      Pet.increase_happiness animal 3;
+      Pet.decrease_energy animal 2;
+      Pet.increase_health animal 1;
+      Printf.printf "%s had a great time swimming!\n" name;
+  | "Swim", Pet.Camel _ ->
+      Pet.increase_happiness animal 3;
+      Pet.decrease_energy animal 2;
+      Pet.decrease_health animal 3;
+      Printf.printf "%s does not know how to swim...\n" name;
+  | _, _ ->
+      Printf.printf "That's not a valid walking option. Please choose again.\n";
+      walk animal
+
 let rec options animal = 
   display_options Pet.options;
   let choice = read_line () in 
   match choice with
   | choice when List.mem choice Pet.options ->
     begin match choice with
-    | "Feed" -> feed animal; options animal (*let updated_animal = feed animal in options updated_animal*)
-    | "Walk" -> options animal
+    | "Feed" -> feed animal; options animal
+    | "Walk" -> walk animal; options animal
     | "Play" -> let updated_animal = play animal in options updated_animal
     | "Clean" -> options animal
     | "Nap" -> options animal
