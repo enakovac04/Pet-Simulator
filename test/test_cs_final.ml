@@ -46,43 +46,63 @@ let tests =
 
         ("Testing Pet.decrease_health" >:: fun _ ->
           assert_equal 8 (let animal = create "Darien" "Dog" in 
-          decrease_health animal 2; get_health animal));
+          decrease_health animal 2; get_health animal)
+          );
+
         ("Testing Pet.decrease_health under minimum" >:: fun _ ->
           assert_equal 0 (let animal = create "Darien" "Dog" in 
-          decrease_health animal 12; get_health animal));
+          decrease_health animal 12; get_health animal)
+          );
+
         ("Testing Pet.increase_health within bounds" >:: fun _ ->
           assert_equal 9 (let animal = create "Darien" "Dog" in 
-          decrease_health animal 2; increase_health animal 1; get_health animal));
+          decrease_health animal 2; increase_health animal 1; get_health animal)
+          );
+
         ("Testing Pet.increase_health to maximum" >:: fun _ ->
           assert_equal 10 (let animal = create "Darien" "Dog" in 
-          increase_health animal 1; get_health animal));
+          increase_health animal 1; get_health animal)
+          );
 
         ("Testing Pet.increase_happiness to maximum" >:: fun _ ->
           assert_equal 10 (let animal = create "Darien" "Dog" in 
-          increase_happiness animal 5; get_happiness animal));
+          increase_happiness animal 5; get_happiness animal)
+          );
+
         ("Testing Pet.decrease_happiness to zero" >:: fun _ ->
           assert_equal 0 (let animal = create "Darien" "Dog" in 
-          decrease_happiness animal 15; get_happiness animal));
+          decrease_happiness animal 15; get_happiness animal)
+          );
 
         ("Testing Pet.increase_energy to maximum" >:: fun _ ->
           assert_equal 10 (let animal = create "Darien" "Dog" in 
-          increase_energy animal 5; get_energy animal));
+          increase_energy animal 5; get_energy animal)
+          );
+
         ("Testing Pet.decrease_energy to zero" >:: fun _ ->
           assert_equal 0 (let animal = create "Darien" "Dog" in 
-          decrease_energy animal 15; get_energy animal));
+          decrease_energy animal 15; get_energy animal)
+          );
 
         ("Testing Pet.set_health" >:: fun _ ->
           let animal = create "Darien" "Dog" in 
-          set_health animal 7; assert_equal 7 (get_health animal));
+          set_health animal 7; assert_equal 7 (get_health animal)
+          );
+
         ("Testing Pet.set_happiness" >:: fun _ ->
           let animal = create "Darien" "Dog" in 
-          set_happiness animal 8; assert_equal 8 (get_happiness animal));
+          set_happiness animal 8; assert_equal 8 (get_happiness animal)
+          );
+
         ("Testing Pet.set_energy" >:: fun _ ->
           let animal = create "Darien" "Dog" in 
-          set_energy animal 6; assert_equal 6 (get_energy animal));
+          set_energy animal 6; assert_equal 6 (get_energy animal)
+          );
+
         ("Testing Pet.set_nutrition" >:: fun _ ->
           let animal = create "Darien" "Dog" in 
-          set_nutrition animal 4; assert_equal 4 (get_nutrition animal));
+          set_nutrition animal 4; assert_equal 4 (get_nutrition animal)
+          );
 
         ("Comprehensive Dog Attributes Test" >:: fun _ ->
           let dog = create "Sparky" "Dog" in
