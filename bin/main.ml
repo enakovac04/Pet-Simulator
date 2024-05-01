@@ -27,48 +27,41 @@ let create_camel () =
 let decrease_health animal amount =
   Pet.decrease_health animal amount; 
   if Pet.get_health animal = 0 then (print_endline "Your pet reached 0 health, and has gitpassed away."; exit 0)
-(*
-  match animal with
-  | Pet.Camel {health; money} ->
-      let new_health = health - amount in
-      if new_health <= 0 then 
-        (print_endline "Your camel reached 0 health, and has passd away."; exit 0)
-      else
-        Pet.Camel {name; health = new_health; money}
-  | Pet.Dog {name; health; money} ->
-      let new_health = health + amount in
-      if new_health <= 0 then 
-        (print_endline "Your dog reached 0 health, and has passed away"; exit 0)
-      else
-        Pet.Dog {name; health = new_health; money}*)
-(*
-let increase_health animal amount = Pet.increase_health animal amount *)
 
 let rec feed animal = 
   let name = Pet.get_name animal in  
   Printf.printf "Choose what food to feed %s: Chocolate Grapes Cheese Pork Fish\n" name;
   let food = read_line () in
   match food, animal with
-  | "Chocolate", Pet.Dog _ -> print_endline "Your dog ate chocolate and got sick. Minus 2 health."; decrease_health animal 2
+  | "Chocolate", Pet.Dog _ -> print_endline "Your dog ate chocolate and got sick. Minus 2 health."; 
+  decrease_health animal 2
   | "Chocolate", _ -> print_endline "Luckily, your pet can eat chocolate safely.";
-  | "Grapes", Pet.Dog _ -> print_endline "Your dog ate grapes and got sick. Minus 2 health."; decrease_health animal 2
+  | "Grapes", Pet.Dog _ -> print_endline "Your dog ate grapes and got sick. Minus 2 health."; 
+  decrease_health animal 2
   | "Grapes", _ -> print_endline "Luckily, your pet can eat grapes safely."; 
   | "Cheese", _ -> print_endline (name ^ " enjoyed the cheese."); 
   | "Pork", _ -> print_endline (name ^ " enjoyed the pork."); 
   | "Fish", _ -> print_endline (name ^ " enjoyed the fish."); 
-  | _, _ -> print_endline "Not one of the options"; feed animal
+  | _, _ -> print_endline "Not one of the options"; 
+  feed animal
 
 let rec play animal = 
   let name = Pet.get_name animal in
   Printf.printf "Choose a toy to play with %s: Ball Rope Bone Trash\n" name;
   let toy = read_line () in 
   match toy, animal with
-  | "Ball", _ -> print_endline (name ^ " loved the toy!"); animal
-  | "Rope", _ -> print_endline (name ^ " loved the toy!"); animal
-  | "Bone", Pet.Dog _ -> print_endline (name ^ " loved the toy!"); animal
-  | "Bone", _ -> print_endline (name ^ " did not like the toy"); animal
-  | "Trash", _ -> print_endline (name ^ " did not like the toy"); animal
-  | _, _ -> print_endline "Not one of the options"; play animal
+  | "Ball", _ -> print_endline (name ^ " loved the toy!"); 
+  animal
+  | "Rope", _ -> print_endline (name ^ " loved the toy!"); 
+  animal
+  | "Bone", Pet.Dog _ -> print_endline (name ^ " loved the toy!"); 
+  animal
+  | "Bone", _ -> print_endline (name ^ " did not like the toy"); 
+  animal
+  | "Trash", _ -> print_endline (name ^ " did not like the toy"); 
+  animal
+  | _, _ -> print_endline "Not one of the options"; 
+  play animal
 
 let rec walk animal =
   let name = Pet.get_name animal in  
@@ -114,21 +107,21 @@ let rec clean animal =
   let methods = read_line () in
   match methods, animal with
   | "Bath", Pet.Dog _ ->
-      Pet.increase_happiness animal 2;  (* Dogs generally enjoy baths *)
-      Pet.increase_health animal 1;     (* Cleaning can boost health *)
+      Pet.increase_happiness animal 2;
+      Pet.increase_health animal 1;
       Printf.printf "%s enjoyed the bath and feels refreshed!\n" name;
   | "Bath", Pet.Camel _ ->
-      Pet.decrease_happiness animal 1;  (* Camels may not enjoy baths as much *)
+      Pet.decrease_happiness animal 1;
       Pet.increase_health animal 1;
       Printf.printf "Bathing %s was challenging but necessary.\n" name;
   | "Dry Shampoo", Pet.Dog _ ->
-      Pet.increase_happiness animal 1;  (* Less enjoyable than a bath *)
+      Pet.increase_happiness animal 1;
       Printf.printf "%s feels cleaner with dry shampoo.\n" name
   | "Dry Shampoo", Pet.Camel _ ->
-      Pet.increase_happiness animal 2;  (* More practical and enjoyable for a camel *)
+      Pet.increase_happiness animal 2; 
       Printf.printf "%s appreciates the quick clean!\n" name;
   | "Brush", _ ->
-      Pet.increase_happiness animal 1;  (* Both animals enjoy brushing *)
+      Pet.increase_happiness animal 1;
       Printf.printf "%s loves being brushed and looks great!\n" name;
   | _, _ ->
       Printf.printf "That's not a valid cleaning option. Please choose again.\n";
@@ -140,15 +133,19 @@ let rec options animal =
   match choice with
   | choice when List.mem choice Pet.options ->
     begin match choice with
-    | "Feed" -> feed animal; options animal
-    | "Walk" -> walk animal; options animal
+    | "Feed" -> feed animal; 
+    options animal
+    | "Walk" -> walk animal; 
+    options animal
     | "Play" -> let updated_animal = play animal in options updated_animal
-    | "Clean" -> clean animal; options animal
+    | "Clean" -> clean animal; 
+    options animal
     | "Nap" -> options animal
     | "Train" -> options animal
     | "Competition" -> options animal
     | "Shop" -> options animal
-    | "END GAME" -> print_endline "Thank you for playing Pet Simulator. Goodbye!"; exit 0
+    | "END GAME" -> print_endline "Thank you for playing Pet Simulator. Goodbye!"; 
+    exit 0
     | _ -> ()
     end;
   | _ -> 
