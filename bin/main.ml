@@ -219,6 +219,213 @@ let rec nap animal =
       Printf.printf "That's not a valid nap option. Please choose again.\n";
       nap animal
 
+let rec navigate_training options animal skills =
+  let rec ask_questions stages points_accumulated =
+    match stages with
+    | [] ->
+      Printf.printf "Training session finished! Evaluating your pet's improvements...\n";
+      finalize_training animal points_accumulated skills
+    | (question, correct_answer) :: tail ->
+      Printf.printf "%s\n" question;
+      let answer = read_line () in
+      if String.lowercase_ascii answer = String.lowercase_ascii correct_answer then
+        begin
+          Printf.printf "Excellent choice! Moving forward.\n";
+          ask_questions tail (points_accumulated + 1)
+        end
+      else
+        begin
+          Printf.printf "Incorrect choice. Try to adjust your strategies.\n";
+          ask_questions tail points_accumulated
+        end
+  in
+  ask_questions options 0
+
+and finalize_training animal points_accumulated skills =
+  let pet = Pet.to_pet animal in
+  if points_accumulated >= 8 then
+    let available_skills = List.filter (fun skill -> not (List.mem skill pet.skills)) skills in
+    if available_skills <> [] then
+      let skill_earned = List.nth available_skills (Random.int (List.length available_skills)) in
+      pet.skills <- skill_earned :: pet.skills; 
+      Printf.printf "Congratulations! Your pet has learned a new skill: %s!\n" skill_earned;
+      Pet.increase_health animal 1;
+      Pet.increase_happiness animal 1;
+    else
+      Printf.printf "Your pet has already mastered all available skills.\n"
+  else if points_accumulated > 0 then
+    Printf.printf "Good effort, but more training is needed to master a new skill.\n"
+  else
+    Printf.printf "No significant progress this session. Try different strategies next time.\n"
+
+let speed_training animal =
+  let speed_options = [
+    ("Choose the best method for speed: Treadmill, Sprinting, Swimming", "Sprinting");
+    ("Set the pace: Fast, Moderate, Slow", "Fast");
+    ("Choose duration: 30 minutes, 1 hour, 2 hours", "1 hour");
+    ("Pick recovery method: Stretching, Massage, Rest", "Stretching");
+    ("Select the environment: Indoor track, Outdoor track, Gym", "Outdoor track");
+    ("Decide on the coach's style: Encouraging, Strict, Technical", "Technical");
+    ("Pick a warm-up activity: Jumping jacks, Dynamic stretching, None", "Dynamic stretching");
+    ("Choose your cooling down routine: Slow jogging, Yoga, Immediate rest", "Slow jogging")
+  ] in
+  let skills = ["Agility"; "Stamina"; "Quick Reflexes"; "Endurance"] in
+  navigate_training speed_options animal skills
+
+let strength_training animal =
+  let strength_options = [
+    ("Select the right weight training: Free weights, Machine weights, Body weight", "Free weights");
+    ("Pick the intensity: High, Medium, Low", "High");
+    ("Set training frequency: Daily, Every other day, Weekly", "Every other day");
+    ("Choose a recovery plan: Protein supplements, Carbs load, Hydration", "Protein supplements");
+    ("Select the training venue: Gym, Home, Outdoor park", "Gym");
+    ("Determine the training time: Morning, Afternoon, Evening", "Morning");
+    ("Decide on a spotter: Yes, No", "Yes");
+    ("Pick motivational music: Rock, Pop, None", "Rock")
+  ] in
+  let skills = 
+    ["Muscle Gain"; "Strength"; "Toughness"; "Power"] in
+  navigate_training strength_options animal skills
+
+let intelligence_training animal =
+  let intelligence_options = [
+    ("Choose the cognitive focus: Memory, Problem-solving, Logical thinking", "Problem-solving");
+    ("Select a puzzle type: Rubik's cube, Sudoku, Crosswords", "Sudoku");
+    ("Set the complexity: Easy, Intermediate, Advanced", "Advanced");
+    ("Decide on session length: 15 minutes, 30 minutes, 1 hour", "30 minutes");
+    ("Choose feedback type: After each attempt, End of session, No feedback", "After each attempt");
+    ("Select training location: Quiet room, Library, Public park", "Library");
+    ("Pick a rest interval: 5 min, 10 min, No rest", "5 min");
+    ("Choose interaction level: Solo, Group, With trainer", "With trainer")
+  ] in
+  let skills = ["Quick Thinking"; "Mental Agility"; "Focus"; "Strategic Planning"] in
+  navigate_training intelligence_options animal skills
+
+let rec train animal =
+  Printf.printf "Advanced Training Session: Choose a focus for today's training - Speed, Strength, Intelligence.\n";
+  let focus = String.lowercase_ascii (read_line ()) in
+  match focus with
+  | "speed" -> speed_training animal
+  | "strength" -> strength_training animal
+  | "intelligence" -> intelligence_training animal
+  | _ ->
+    Printf.printf "Invalid focus. Please select a valid focus for training.\n";
+    train animal
+
+let print_status animal =
+  let status = Pet.status_to_string animal in
+  print_endline status
+
+type shop_item = {
+  name : string;
+  effect : string;
+  change : int;
+  cost : float;
+}
+
+let shop_items = [
+  {name = "Vitamin Boost"; effect = "health"; change = 2; cost = 2.5};
+  {name = "Energy Drink"; effect = "energy"; change = 3; cost = 3.0};
+  {name = "Happiness Cookie"; effect = "happiness"; change = 2; cost = 1.5};
+  {name = "Nutrition Snack"; effect = "nutrition"; change = 1; cost = 2.0};
+]
+
+let display_shop_items () =
+  Printf.printf "Available items for purchase:\n";
+  List.iteri (fun i item ->
+    Printf.printf "%d: %s - %s +%d (Cost: $%.2f)\n" (i+1) item.name item.effect item.change item.cost
+  ) shop_items;
+  Printf.printf "Enter the number to buy an item or 'exit' to leave: "
+
+let rec shop animal =
+  display_shop_items ();
+  let input = read_line () in
+  match input with
+  | "exit" -> ()
+  | _ -> process_input input animal
+
+and process_input input animal =
+  match int_of_string_opt input with
+  | Some index when index > 0 && index <= List.length shop_items ->
+      let item = List.nth shop_items (index - 1) in
+      confirm_purchase item animal
+  | _ ->
+      Printf.printf "Invalid input. Please enter a valid number or 'exit'.\n";
+      shop animal
+
+and confirm_purchase item animal =
+  Printf.printf "Confirm purchase of %s for $%.2f? (yes/no): " item.name item.cost;
+  match String.trim (String.lowercase_ascii (read_line ())) with
+  | "yes" -> process_transaction item animal
+  | "no" -> shop animal
+  | _ ->
+      Printf.printf "Please type 'yes' or 'no' to confirm.\n";
+      confirm_purchase item animal
+
+and process_transaction item animal =
+  let pet = Pet.to_pet animal in
+  if pet.money >= item.cost then
+    begin
+      pet.money <- pet.money -. item.cost;
+      apply_effects item animal;
+      Printf.printf "You have purchased %s. Remaining Balance: $%.2f\n" item.name pet.money;
+      shop animal
+    end
+  else
+    begin
+      Printf.printf "Not enough money. Your balance: $%.2f\n" pet.money;
+      shop animal
+    end
+
+and apply_effects item animal =
+  match item.effect with
+  | "health" -> Pet.increase_health animal item.change
+  | "happiness" -> Pet.increase_happiness animal item.change
+  | "energy" -> Pet.increase_energy animal item.change
+  | "nutrition" -> Pet.increase_nutrition animal item.change
+  | _ -> ()
+
+let rec battle animal =
+  Printf.printf "Welcome to the Pet Battle! Your performance will determine your prize.\n";
+  let stages = [
+    ("Choose the right gear: Light Armor, Heavy Armor, No Armor", "Light Armor", 10);
+    ("Select the correct starting position: Front, Middle, Back", "Back", 5);  
+    ("Choose your strategy: Aggressive, Defensive, Balanced", "Balanced", 15);
+    ("Pick the right rest interval: 1 min, 2 min, 5 min", "2 min", 10);  
+    ("Select your final move: Charge, Evade, Counterattack", "Charge", 20); 
+    ("Choose your victory pose: Jump, Roll, Sit", "Sit", 5)
+  ] in
+  let rec navigate_stages current_stages animal points_accumulated =
+    match current_stages with
+    | [] -> 
+      Printf.printf "Battle finished! Calculating results based on your score of %d points...\n" points_accumulated;
+      reward animal points_accumulated
+    | (question, correct_answer, point_value) :: tail ->
+      Printf.printf "%s\n" question;
+      let answer = read_line () in
+      if String.lowercase_ascii answer = String.lowercase_ascii correct_answer then
+        begin
+          Printf.printf "Correct choice! + %d points. Moving to the next challenge.\n" point_value;
+          navigate_stages tail animal (points_accumulated + point_value)
+        end
+      else
+        begin
+          Printf.printf "Wrong choice! No points. Try again or type 'exit' to leave the battle.\n";
+          if String.lowercase_ascii (read_line ()) = "exit" then ()
+          else navigate_stages current_stages animal points_accumulated
+        end
+  in
+  navigate_stages stages animal 0
+
+and reward animal points_accumulated =
+  let pet = Pet.to_pet animal in
+  let base_prize = 2.0 in
+  let multiplier = float_of_int points_accumulated *. 0.1 in
+  let total_prize = base_prize +. multiplier in
+  Printf.printf "Congratulations! You have won $%.2f based on your performance!\n" total_prize;
+  pet.money <- pet.money +. total_prize;
+  Printf.printf "Your new balance is $%.2f\n" pet.money
+
 let rec options animal = 
   display_options Pet.options;
   let choice = read_line () in 
@@ -245,9 +452,24 @@ let rec options animal =
       nap animal; 
       status animal; 
       options animal
-    | "Train" ->  options animal
-    | "Competition" -> options animal
-    | "Shop" -> options animal
+    | "Train" ->  
+      train animal;
+      options animal
+    | "Battle" -> 
+      battle animal;
+      options animal
+    | "Shop" ->
+      shop animal;
+      options animal
+    | "Status" -> 
+      print_status animal;
+      options animal
+    | "Groom" -> options animal;
+    | "Event" -> options animal;
+    | "Job" -> options animal;
+    | "Explore" -> options animal;
+    | "Vet" -> options animal;
+    | "Socializing" -> options animal;
     | "END GAME" -> print_endline "Thank you for playing Pet Simulator. Goodbye!"; 
     exit 0
     | _ -> ()

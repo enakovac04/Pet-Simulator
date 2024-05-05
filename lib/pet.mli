@@ -8,11 +8,17 @@ type pet = {
   mutable energy : int;
   mutable nutrition : int;
   mutable money : float;
+  mutable skills : string list;
 }
+
+(** List of available actions or options in the pet simulator. *)
+val options : string list
 
 type animal =
   | Camel of pet
   | Dog of pet
+
+val to_pet : animal -> pet
 
 (** Creates a new animal with specified name and type. Throws if the type is invalid. *)
 val create : string -> string -> animal
@@ -54,6 +60,3 @@ val set_nutrition : animal -> int -> unit
 
 (** Retrieves the name of the animal. *)
 val get_name : animal -> string
-
-(** List of available actions or options in the pet simulator. *)
-val options : string list

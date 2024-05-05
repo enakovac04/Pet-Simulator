@@ -5,9 +5,10 @@ type pet = {
   mutable energy : int;
   mutable nutrition : int;
   mutable money : float;
+  mutable skills : string list;
 }
 
-let options = ["Feed"; "Walk"; "Play"; "Clean"; "Nap"; "Train"; "Competition"; "Shop"; "END GAME"]
+let options = ["Feed"; "Walk"; "Play"; "Clean"; "Nap"; "Train"; "Battle"; "Shop"; "Status"; "Groom"; "Event"; "Job"; "Explore"; "Vet"; "Socializing"; "END GAME"]
 
 type animal =
   | Camel of pet
@@ -15,7 +16,14 @@ type animal =
 
 let create name animal : animal =
   let max = 10 in
-  let stats = { name; health = max; happiness = max; energy = max; nutrition = max; money = 5.0} in
+  let stats = 
+    {name; 
+    health = max; 
+    happiness = max; 
+    energy = max; 
+    nutrition = max; 
+    skills = []; 
+    money = 5.0} in
   match animal with
   | "Camel" -> Camel stats
   | "Dog" -> Dog stats

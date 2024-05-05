@@ -4,6 +4,7 @@ open Pet
 
 let test_pet name (input : animal) func expected_output =
   name >:: fun _ -> assert_equal expected_output (func input)
+
 let tests =
   " Testing Myset functions with Txtfileset"
   >::: [
