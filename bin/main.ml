@@ -58,6 +58,9 @@ let decrease_nutrition animal amount =
   Pet.decrease_nutrition animal amount; 
   Printf.printf "-%i nutrition \n" amount
 
+let status animal =
+  Printf.printf "%s \n" (Pet.status_to_string animal)
+
 let rec feed animal = 
   let name = Pet.get_name animal in  
   Printf.printf "Choose what food to feed %s: Chocolate, Grapes, Cheese, Pork, Fish\n" name;
@@ -189,17 +192,17 @@ let rec nap animal =
   match methods, animal with
     | "Bed", _ -> 
       Printf.printf "%s was very comfortable and slept well!\n" name;
-    increase_happiness animal 1;
-    increase_energy animal 2;
-    increase_health animal 1
+      increase_happiness animal 1;
+      increase_energy animal 2;
+      increase_health animal 1
     | "Sand", Pet.Camel _ -> 
       Printf.printf "%s was very comfortable and slept well!\n" name;
-    increase_happiness animal 1;
-    increase_energy animal 2;
-    increase_health animal 1
+      increase_happiness animal 1;
+      increase_energy animal 2;
+      increase_health animal 1
     | "Sand", _ -> 
       Printf.printf "%s slept fine.\n" name;
-    increase_energy animal 1
+     increase_energy animal 1
     | "Box", Pet.Camel _ ->
       Printf.printf "%s could not fit!" name;
       decrease_happiness animal 2;
@@ -222,12 +225,27 @@ let rec options animal =
   match choice with
   | choice when List.mem choice Pet.options ->
     begin match choice with
-    | "Feed" -> feed animal; options animal
-    | "Walk" -> walk animal; options animal
-    | "Play" -> play animal; options animal
-    | "Clean" -> clean animal; options animal
-    | "Nap" -> nap animal; options animal
-    | "Train" -> options animal
+    | "Feed" -> 
+      feed animal; 
+      status animal; 
+      options animal
+    | "Walk" -> 
+      walk animal; 
+      status animal; 
+      options animal
+    | "Play" -> 
+      play animal; 
+      status animal; 
+      options animal
+    | "Clean" -> 
+      clean animal; 
+      status animal; 
+      options animal
+    | "Nap" -> 
+      nap animal; 
+      status animal; 
+      options animal
+    | "Train" ->  options animal
     | "Competition" -> options animal
     | "Shop" -> options animal
     | "END GAME" -> print_endline "Thank you for playing Pet Simulator. Goodbye!"; 
