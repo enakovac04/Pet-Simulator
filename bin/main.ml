@@ -60,7 +60,7 @@ let decrease_nutrition animal amount =
 
 let rec feed animal = 
   let name = Pet.get_name animal in  
-  Printf.printf "Choose what food to feed %s: Chocolate Grapes Cheese Pork Fish\n" name;
+  Printf.printf "Choose what food to feed %s: Chocolate, Grapes, Cheese, Pork, Fish\n" name;
   let food = read_line () in
   match food, animal with
   | "Chocolate", Pet.Dog _ -> 
@@ -97,7 +97,8 @@ let rec play animal =
   match toy, animal with
   | "Ball", _ -> 
     Printf.printf "%s loved the toy! \n" name; 
-    increase_happiness animal 2; decrease_energy animal 1
+    increase_happiness animal 2;
+    decrease_energy animal 1
   | "Rope", _ -> 
     Printf.printf "%s loved the toy! \n" name; 
     increase_happiness animal 2;
@@ -123,32 +124,34 @@ let rec walk animal =
   | "Park", Pet.Dog _ ->
       Printf.printf "%s enjoyed a lovely walk in the park.\n" name;
       increase_happiness animal 2;
-      decrease_energy animal 1
+      decrease_energy animal 1;
+      increase_health animal 1
   | "Park", Pet.Camel _ ->
       Printf.printf "You got strange looks for bringing a %s to a park. \n" name;
       decrease_energy animal 2
   | "Street", _ ->
       Printf.printf "%s had a nice time walking on the street.\n" name;
       increase_happiness animal 1;
-      decrease_energy animal 1
+      decrease_energy animal 1;
+      increase_health animal 1
   | "Desert", Pet.Dog _ ->
       Printf.printf "%s found the desert walk challenging and feels tired.\n" name;
-      decrease_health animal 2;
-      decrease_energy animal 2
+      decrease_energy animal 2;
+      decrease_health animal 2
   | "Desert", Pet.Camel _ ->
       Printf.printf "%s found the desert walk refreshing and feels energized.\n" name;
-      Pet.decrease_health animal 2;
-      Pet.increase_energy animal 2
+      increase_energy animal 2;
+      decrease_health animal 2
   | "Swim", Pet.Dog _ ->
       Printf.printf "%s had a great time swimming!\n" name;
-      Pet.increase_happiness animal 3;
-      Pet.decrease_energy animal 2;
-      Pet.increase_health animal 1
+      increase_happiness animal 3;
+      decrease_energy animal 2;
+      increase_health animal 1
   | "Swim", Pet.Camel _ ->
       Printf.printf "%s does not know how to swim...\n" name;
-      Pet.increase_happiness animal 3;
-      Pet.decrease_energy animal 2;
-      Pet.decrease_health animal 3
+      increase_happiness animal 3;
+      decrease_energy animal 2;
+      decrease_health animal 3
   | _, _ ->
       Printf.printf "That's not a valid walking option. Please choose again.\n";
       walk animal
@@ -179,20 +182,51 @@ let rec clean animal =
       Printf.printf "That's not a valid cleaning option. Please choose again.\n";
       clean animal
 
+let rec nap animal =
+  let name = Pet.get_name animal in
+  Printf.printf "Where would you like %s to nap? Options: Bed, Sand, Box, Concrete \n" name;
+  let methods = read_line () in
+  match methods, animal with
+    | "Bed", _ -> 
+      Printf.printf "%s was very comfortable and slept well!\n" name;
+    increase_happiness animal 1;
+    increase_energy animal 2;
+    increase_health animal 1
+    | "Sand", Pet.Camel _ -> 
+      Printf.printf "%s was very comfortable and slept well!\n" name;
+    increase_happiness animal 1;
+    increase_energy animal 2;
+    increase_health animal 1
+    | "Sand", _ -> 
+      Printf.printf "%s slept fine.\n" name;
+    increase_energy animal 1
+    | "Box", Pet.Camel _ ->
+      Printf.printf "%s could not fit!" name;
+      decrease_happiness animal 2;
+      decrease_energy animal 2;
+      decrease_health animal 1
+    | "Box", _ -> 
+      Printf.printf "%s slept fine.\n" name;
+      increase_energy animal 1
+    | "Concrete", _ -> 
+      Printf.printf "%s was very uncomfortable and could not sleep!\n" name;
+      decrease_happiness animal 2;
+      decrease_energy animal 2;
+    | _, _ ->
+      Printf.printf "That's not a valid nap option. Please choose again.\n";
+      nap animal
+
 let rec options animal = 
   display_options Pet.options;
   let choice = read_line () in 
   match choice with
   | choice when List.mem choice Pet.options ->
     begin match choice with
-    | "Feed" -> feed animal; 
-    options animal
-    | "Walk" -> walk animal; 
-    options animal
-    | "Play" ->  play animal
-    | "Clean" -> clean animal;
-    options animal
-    | "Nap" -> options animal
+    | "Feed" -> feed animal; options animal
+    | "Walk" -> walk animal; options animal
+    | "Play" -> play animal; options animal
+    | "Clean" -> clean animal; options animal
+    | "Nap" -> nap animal; options animal
     | "Train" -> options animal
     | "Competition" -> options animal
     | "Shop" -> options animal
