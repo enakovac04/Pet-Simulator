@@ -505,9 +505,11 @@ let rec options animal =
       options animal
     | "Train" ->  
       train animal;
+      status animal;
       options animal
     | "Battle" -> 
       battle animal;
+      status animal;
       options animal
     | "Shop" ->
       shop animal;
