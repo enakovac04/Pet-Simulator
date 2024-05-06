@@ -12,6 +12,10 @@ let tests =
           "Camel Claire has 10/10 health, 10/10 happiness, 10/10 energy, 10/10 nutrition, and $5.";
         test_pet "Testing Pet.create" (create "Darien" "Dog") status_to_string
           "Dog Darien has 10/10 health, 10/10 happiness, 10/10 energy, 10/10 nutrition, and $5.";
+        test_pet "Testing Pet.create and Pet.get_microchip" (create "Darien" "Dog") 
+          Pet.get_microchip false;
+        test_pet "Testing Pet.create and Pet.get_microchip2" (create "Darien" "Camel") 
+          Pet.get_microchip false;
         test_pet "Testing Pet.get_name" (create "Darien" "Dog") get_name
           "Darien";
         test_pet "Testing Pet.health_to_string" (create "Darien" "Dog") health_to_string
@@ -36,6 +40,10 @@ let tests =
         "Camel Darien has 10/10 nutrition";
         test_pet "Testing Pet.money_to_string2" (create "Darien" "Camel") money_to_string
         "Camel Darien has $5.";
+        test_pet "Testing Pet.microchip_to_string" (create "Darien" "Dog") microchip_to_string
+        "Dog Darien does not have a microchip.";
+        test_pet "Testing Pet.microchip_to_string2" (create "Darien" "Camel") microchip_to_string
+        "Camel Darien does not have a microchip.";
 
         ("Full attribute set and reset for Camel1" >:: fun _ ->
           let camel = create "Humphrey" "Camel" in
@@ -228,6 +236,28 @@ let tests =
         ("Testing Pet.set_nutrition2" >:: fun _ ->
           let animal = create "Darien" "Camel" in 
           set_nutrition animal 4; assert_equal 4 (get_nutrition animal)
+          );
+
+        ("Testing Pet.set_microchip" >:: fun _ ->
+          let animal = create "Darien" "Dog" in 
+          set_microchip animal; assert_equal true (get_microchip animal)
+          );
+
+        ("Testing Pet.set_microchip2" >:: fun _ ->
+          let animal = create "Darien" "Camel" in 
+          set_microchip animal; assert_equal true (get_microchip animal)
+          );
+
+        ("Testing Pet.set_microchip and Pet.microchip_to_string" >:: fun _ ->
+          let animal = create "Darien" "Dog" in 
+          set_microchip animal; assert_equal "Dog Darien has a microchip." 
+          (microchip_to_string animal)
+          );
+
+        ("Testing Pet.set_microchip and Pet.microchip_to_string2" >:: fun _ ->
+          let animal = create "Darien" "Camel" in 
+          set_microchip animal; assert_equal "Camel Darien has a microchip." 
+          (microchip_to_string animal)
           );
 
         ("Comprehensive Dog Attributes Test" >:: fun _ ->

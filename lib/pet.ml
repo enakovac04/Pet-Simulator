@@ -6,6 +6,7 @@ type pet = {
   mutable nutrition : int;
   mutable money : float;
   mutable skills : string list;
+  mutable microchip : bool;
 }
 
 let options = ["Feed"; "Walk"; "Play"; "Clean"; "Nap"; "Train"; "Battle"; "Shop"; "Status"; "Groom"; "Event"; "Job"; "Explore"; "Vet"; "Socializing"; "END GAME"]
@@ -23,7 +24,7 @@ let create name animal : animal =
     energy = max; 
     nutrition = max; 
     skills = []; 
-    money = 5.0} in
+    money = 5.0; microchip = false} in
   match animal with
   | "Camel" -> Camel stats
   | "Dog" -> Dog stats
@@ -146,3 +147,18 @@ let get_name animal =
   match animal with
   | Dog d -> d.name
   | Camel c -> c.name
+
+let get_microchip animal =
+  match animal with
+  | Dog d -> d.microchip
+  | Camel c -> c.microchip
+
+let set_microchip animal =
+  match animal with
+  | Dog d -> d.microchip <- true
+  | Camel c -> c.microchip <- true
+
+let microchip_to_string p = 
+  let pet = to_pet p in 
+  if pet.microchip then to_string p ^ " " ^ pet.name ^ " has a microchip." 
+  else to_string p ^ " " ^ pet.name ^ " does not have a microchip."

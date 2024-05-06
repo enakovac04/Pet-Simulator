@@ -9,6 +9,7 @@ type pet = {
   mutable nutrition : int;
   mutable money : float;
   mutable skills : string list;
+  mutable microchip : bool
 }
 
 (** List of available actions or options in the pet simulator. *)
@@ -57,6 +58,9 @@ val set_health : animal -> int -> unit
 val set_happiness : animal -> int -> unit
 val set_energy : animal -> int -> unit
 val set_nutrition : animal -> int -> unit
+val set_microchip : animal -> unit
 
 (** Retrieves the name of the animal. *)
+val microchip_to_string : animal -> string
 val get_name : animal -> string
+val get_microchip : animal -> bool

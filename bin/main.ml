@@ -27,7 +27,12 @@ let display_options options =
 
 let decrease_health animal amount =
   Pet.decrease_health animal amount; 
-  if Pet.get_health animal = 0 then (print_endline "Your pet reached 0 health, and has gitpassed away."; exit 0)
+  let health = Pet.get_health animal in
+  let name = Pet.get_name animal in
+  if health = 0 then 
+    (Printf.printf "%s reached 0 health, and has passed away." name; exit 0)
+  else if health < 3 then 
+    Printf.printf "%s has poor health and has been diagnosed with a fever.\n" name
   else Printf.printf "-%i health \n" amount
 
 let increase_health animal amount =
@@ -67,13 +72,13 @@ let rec feed animal =
   let food = read_line () in
   match food, animal with
   | "Chocolate", Pet.Dog _ -> 
-    Printf.printf "Your dog %s ate chocolate and got sick.\n" name; 
+    Printf.printf "Your dog %s ate chocolate and threw upk.\n" name; 
     decrease_nutrition animal 2; 
     decrease_health animal 2
   | "Chocolate", _ ->
     Printf.printf "Luckily, your pet %s can eat chocolate safely.\n" name;
   | "Grapes", Pet.Dog _ -> 
-    Printf.printf "Your dog %s ate grapes and got sick.\n" name; 
+    Printf.printf "Your dog %s ate grapes and threw up.\n" name; 
     decrease_nutrition animal 2; 
     decrease_health animal 2
   | "Grapes", _ -> 
@@ -119,49 +124,66 @@ let rec play animal =
   | _, _ -> print_endline "Not one of the options \n"; 
   play animal
 
+let ran_away animal leash = 
+  let name = Pet.get_name animal in
+  if leash then () 
+  else (Printf.printf "%s ran away!\n" name; 
+    let microchip = Pet.get_microchip animal in
+      if microchip then 
+        Printf.printf "Luckily, %s has a microchip so you were able to find your pet! \n" name
+      else (Printf.printf "You could not find %s." name; exit 0)
+  )
+
 let rec walk animal =
   let name = Pet.get_name animal in  
+  Printf.printf "Would you like to bring a leash? Y/N \n";
+  let response = read_line () in
   Printf.printf "Where would you like to walk %s? Options: Park, Street, Desert, Swim\n" name;
   let location = read_line () in
   match location, animal with
   | "Park", Pet.Dog _ ->
-      Printf.printf "%s enjoyed a lovely walk in the park.\n" name;
-      increase_happiness animal 2;
-      decrease_energy animal 1;
-      increase_health animal 1
+    if response = "Y" then ran_away animal true else ran_away animal false;
+    Printf.printf "%s enjoyed a lovely walk in the park.\n" name;
+    increase_happiness animal 2;
+    decrease_energy animal 1;
+    increase_health animal 1
   | "Park", Pet.Camel _ ->
-      Printf.printf "You got strange looks for bringing a %s to a park. \n" name;
-      decrease_energy animal 2
+    if response = "Y" then ran_away animal true else ran_away animal false;
+    Printf.printf "You got strange looks for bringing a %s to a park. \n" name;
+    decrease_energy animal 2
   | "Street", _ ->
-      Printf.printf "%s had a nice time walking on the street.\n" name;
-      increase_happiness animal 1;
-      decrease_energy animal 1;
-      increase_health animal 1
+    if response = "Y" then ran_away animal true else ran_away animal false;
+    Printf.printf "%s had a nice time walking on the street.\n" name;
+    increase_happiness animal 1;
+    decrease_energy animal 1;
+    increase_health animal 1
   | "Desert", Pet.Dog _ ->
-      Printf.printf "%s found the desert walk challenging and feels tired.\n" name;
-      decrease_energy animal 2;
-      decrease_health animal 2
+    if response = "Y" then ran_away animal true else ran_away animal false;
+    Printf.printf "%s found the desert walk challenging and feels tired.\n" name;
+    decrease_energy animal 2;
+    decrease_health animal 2
   | "Desert", Pet.Camel _ ->
-      Printf.printf "%s found the desert walk refreshing and feels energized.\n" name;
-      increase_energy animal 2;
-      decrease_health animal 2
+    if response = "Y" then ran_away animal true else ran_away animal false;
+    Printf.printf "%s found the desert walk refreshing and feels energized.\n" name;
+    increase_energy animal 2;
+    decrease_health animal 2
   | "Swim", Pet.Dog _ ->
-      Printf.printf "%s had a great time swimming!\n" name;
-      increase_happiness animal 3;
-      decrease_energy animal 2;
-      increase_health animal 1
+    Printf.printf "%s had a great time swimming!\n" name;
+    increase_happiness animal 3;
+    decrease_energy animal 2;
+    increase_health animal 1
   | "Swim", Pet.Camel _ ->
-      Printf.printf "%s does not know how to swim...\n" name;
-      increase_happiness animal 3;
-      decrease_energy animal 2;
-      decrease_health animal 3
+    Printf.printf "%s does not know how to swim...\n" name;
+    increase_happiness animal 3;
+    decrease_energy animal 2;
+    decrease_health animal 3
   | _, _ ->
       Printf.printf "That's not a valid walking option. Please choose again.\n";
       walk animal
 
 let rec clean animal =
   let name = Pet.get_name animal in
-  Printf.printf "How would you like to clean %s? Options: Bath, Dry Shampoo, Brush\n" name;
+  Printf.printf "How would you like to clean %s? Options: Bath, Dry Shampoo, Brush, Mud\n" name;
   let methods = read_line () in
   match methods, animal with
   | "Bath", Pet.Dog _ ->
@@ -181,6 +203,9 @@ let rec clean animal =
   | "Brush", _ ->
       Printf.printf "%s loves being brushed and looks great!\n" name;
       increase_happiness animal 1
+  | "Mud", _ ->
+    Printf.printf "%s is dirty and got fleas! \n" name;
+    decrease_health animal 2
   | _, _ ->
       Printf.printf "That's not a valid cleaning option. Please choose again.\n";
       clean animal
@@ -312,10 +337,6 @@ let rec train animal =
     Printf.printf "Invalid focus. Please select a valid focus for training.\n";
     train animal
 
-let print_status animal =
-  let status = Pet.status_to_string animal in
-  print_endline status
-
 type shop_item = {
   name : string;
   effect : string;
@@ -426,6 +447,36 @@ and reward animal points_accumulated =
   pet.money <- pet.money +. total_prize;
   Printf.printf "Your new balance is $%.2f\n" pet.money
 
+let rec vet animal = 
+  let name = Pet.get_name animal in
+  Printf.printf "What would you like to treat %s for? Microchip, Fleas, Puking, Fever, Depression\n" name;
+  let choice = read_line () in 
+  match choice with
+  | "Microchip" -> (
+    match Pet.get_microchip animal with
+    | true -> Printf.printf "%s already has a microchip.\n" name
+    | false ->  Printf.printf "%s has successfully recieved a microchip.\n" name;
+    Pet.set_microchip animal
+  )
+  | "Fleas" -> 
+    Printf.printf "The vet gave %s flea shampoo. %s is all better!\n" name name;
+    increase_health animal 3
+  | "Puking" -> 
+    Printf.printf "The vet gave %s probiotics. %s feels better!\n" name name;
+    increase_health animal 3;
+    increase_nutrition animal 2
+  | "Fever" -> 
+    Printf.printf "The vet gave %s medicine. %s feels better!\n" name name;
+    increase_health animal 3;
+  | "Depression" ->
+    Printf.printf "The vet gave %s antidepressants. %s feel better!\n" name name;
+    increase_health animal 3;
+    increase_happiness animal 3;
+    increase_energy animal 2
+  | _ ->
+      Printf.printf "That's not a valid option. Please choose again.\n";
+      vet animal
+
 let rec options animal = 
   display_options Pet.options;
   let choice = read_line () in 
@@ -460,15 +511,19 @@ let rec options animal =
       options animal
     | "Shop" ->
       shop animal;
+      status animal;
       options animal
     | "Status" -> 
-      print_status animal;
+      status animal;
       options animal
     | "Groom" -> options animal;
     | "Event" -> options animal;
     | "Job" -> options animal;
     | "Explore" -> options animal;
-    | "Vet" -> options animal;
+    | "Vet" -> 
+      vet animal;
+      status animal;
+      options animal;
     | "Socializing" -> options animal;
     | "END GAME" -> print_endline "Thank you for playing Pet Simulator. Goodbye!"; 
     exit 0
