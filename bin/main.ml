@@ -463,6 +463,7 @@ and reward animal points_accumulated =
   pet.money <- pet.money +. total_prize;
   Printf.printf "Your new balance is $%.2f\n" pet.money
 
+
 (* MINIGAME --------------------------------------------*)
 
 let signal_handled = ref false
@@ -575,7 +576,7 @@ let display_help () =
   Status: View your pet's health, happiness, energy and nutrition levels and your monetary balance
   Groom: 
   Event: 
-  Minigame:
+  Minigame: Play a chance minigame where you try to collect dollar signs to earn money.
   Job: 
   Explore: 
   Vet: Take your pet to the vet to possibly increase statuses with treatments
