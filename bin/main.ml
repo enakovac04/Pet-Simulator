@@ -30,7 +30,7 @@ let decrease_health animal amount =
   let health = Pet.get_health animal in
   let name = Pet.get_name animal in
   if health = 0 then 
-    (Printf.printf "%s reached 0 health, and has passed away." name; exit 0)
+    (Printf.printf "%s reached 0 health and has passed away." name; exit 0)
   else if health < 3 then 
     Printf.printf "%s has poor health and has been diagnosed with a fever.\n" name
   else Printf.printf "-%i health \n" amount
@@ -45,7 +45,13 @@ let increase_happiness animal amount =
 
 let decrease_happiness animal amount =
   Pet.decrease_happiness animal amount; 
-  Printf.printf "-%i happiness \n" amount
+  let happiness = Pet.get_happiness animal in
+  let name = Pet.get_name animal in
+  if happiness = 0 then 
+    (Printf.printf "%s reached 0 happiness and went to find a better owner." name; exit 0)
+  else if happiness < 3 then 
+    Printf.printf "%s is unhappy and has been diagnosed with depression.\n" name
+  else Printf.printf "-%i happiness \n" amount
 
 let increase_energy animal amount =
   Pet.increase_energy animal amount; 
@@ -53,7 +59,13 @@ let increase_energy animal amount =
 
 let decrease_energy animal amount =
   Pet.decrease_energy animal amount; 
-  Printf.printf "-%i energy \n" amount
+  let energy = Pet.get_energy animal in
+  let name = Pet.get_name animal in
+  if energy = 0 then 
+    (Printf.printf "%s reached 0 energy and went to find a better owner." name; exit 0)
+  else if energy < 3 then 
+    Printf.printf "%s is really tired and would like to take a nap.\n" name
+  else Printf.printf "-%i energy \n" amount
 
 let increase_nutrition animal amount =
   Pet.increase_nutrition animal amount; 
@@ -61,7 +73,13 @@ let increase_nutrition animal amount =
 
 let decrease_nutrition animal amount =
   Pet.decrease_nutrition animal amount; 
-  Printf.printf "-%i nutrition \n" amount
+  let nutrition = Pet.get_nutrition animal in
+  let name = Pet.get_name animal in
+  if nutrition = 0 then 
+    (Printf.printf "%s reached 0 nutrition and went to find a better owner." name; exit 0)
+  else if nutrition < 3 then 
+    Printf.printf "%s is starving and is begging you to feed them something.\n" name
+  else Printf.printf "-%i nutrition \n" amount
 
 let status animal =
   Printf.printf "%s \n" (Pet.status_to_string animal)
@@ -421,6 +439,20 @@ and apply_effects item animal =
   | _ -> ()
 
 
+(* RIDE --------------------------------------------*)
+let ride animal =
+  let name = Pet.get_name animal in
+  match animal with
+  | Pet.Dog _ ->
+    Printf.printf "%s was too small for you to ride. You hurt %s's back.\n" name name;
+    decrease_health animal 2
+  | Pet.Camel _ -> 
+    Printf.printf "You went for a lovely ride on %s! %s is very happy but is also feeling tired.\n" name name;
+    increase_happiness animal 2;
+    decrease_energy animal 2
+
+
+
 (* BATTLE --------------------------------------------*)
 let rec battle animal =
   Printf.printf "Welcome to the Pet Battle! Your performance will determine your prize.\n";
@@ -478,7 +510,7 @@ Welcome to the minigame!
 The goal is to try to stop the game using Ctrl+C when you have at least 5 dollar signs. If you do, you'll earn $%s!\n" (string_of_int earning);
   Printf.printf "Before you begin, adjust your screen size so this line is on the same line:
   +--------------------------------------------------------------------------------+\n";
-  Printf.printf "Press enter to start the minigame! \n"
+  Printf.printf "Press the enter key to start the minigame! \n"
 
 let earn animal dollar_signs earning = 
   if dollar_signs > 4 then begin
@@ -522,7 +554,7 @@ let minigame animal =
   let earning = 3 in
   instructions earning;
   let _ = read_line () in
-  let arguments = [|10; 20; 10|] in
+  let arguments = [|10; 20; 8|] in
   let initial = Grid.empty arguments.(0) arguments.(1) in
   let fps = arguments.(2) in
   let rate = 1. /. (float_of_int fps) in
@@ -574,9 +606,10 @@ let display_help () =
   Battle: Battle another pet for the chance to earn money
   Shop: Buy items that can boost your statuses
   Status: View your pet's health, happiness, energy and nutrition levels and your monetary balance
+  Ride: Take a ride on your pet
   Groom: 
   Event: 
-  Minigame: Play a chance minigame where you try to collect dollar signs to earn money.
+  Minigame: Play a chance minigame where you try to collect dollar signs to earn money
   Job: 
   Explore: 
   Vet: Take your pet to the vet to possibly increase statuses with treatments
@@ -627,6 +660,10 @@ let rec options animal =
     | "Status" -> 
       status animal;
       options animal
+    | "Ride" -> 
+      ride animal;
+      status animal;
+      options animal;
     | "Groom" -> options animal;
     | "Event" -> options animal;
     | "Minigame" -> 

@@ -27,6 +27,6 @@ let increasing coin =
   | None -> if random_num > 29 then coin.value <- Small
   | Small -> if random_num > 27 then coin.value <- Medium else if random_num < 5 then coin.value <- None
   | Medium -> if random_num > 27 then coin.value <- Big else if random_num < 7 then coin.value <- None
-  | Big -> if random_num < 10 then coin.value <- None
+  | Big -> if random_num < 9 then coin.value <- None
 
 
