@@ -66,6 +66,8 @@ let decrease_nutrition animal amount =
 let status animal =
   Printf.printf "%s \n" (Pet.status_to_string animal)
 
+
+(* FEED --------------------------------------------*)
 let rec feed animal = 
   let name = Pet.get_name animal in  
   Printf.printf "Choose what food to feed %s: Chocolate, Grapes, Cheese, Pork, Fish\n" name;
@@ -98,6 +100,8 @@ let rec feed animal =
   | _, _ -> print_endline "Not one of the options\n"; 
   feed animal
 
+
+(* PLAY --------------------------------------------*)
 let rec play animal = 
   let name = Pet.get_name animal in
   Printf.printf "Choose a toy to play with %s: Ball Rope Bone Trash\n" name;
@@ -124,6 +128,8 @@ let rec play animal =
   | _, _ -> print_endline "Not one of the options \n"; 
   play animal
 
+
+(* WALK  --------------------------------------------*)
 let ran_away animal leash = 
   let name = Pet.get_name animal in
   if leash then () 
@@ -181,6 +187,8 @@ let rec walk animal =
       Printf.printf "That's not a valid walking option. Please choose again.\n";
       walk animal
 
+
+(* CLEAN  --------------------------------------------*)
 let rec clean animal =
   let name = Pet.get_name animal in
   Printf.printf "How would you like to clean %s? Options: Bath, Dry Shampoo, Brush, Mud\n" name;
@@ -210,6 +218,8 @@ let rec clean animal =
       Printf.printf "That's not a valid cleaning option. Please choose again.\n";
       clean animal
 
+
+(* NAP  --------------------------------------------*)
 let rec nap animal =
   let name = Pet.get_name animal in
   Printf.printf "Where would you like %s to nap? Options: Bed, Sand, Box, Concrete \n" name;
@@ -244,6 +254,8 @@ let rec nap animal =
       Printf.printf "That's not a valid nap option. Please choose again.\n";
       nap animal
 
+
+(* TRAINING  --------------------------------------------*)
 let rec navigate_training options animal skills =
   let rec ask_questions stages points_accumulated =
     match stages with
@@ -337,6 +349,8 @@ let rec train animal =
     Printf.printf "Invalid focus. Please select a valid focus for training.\n";
     train animal
 
+
+(* SHOP  --------------------------------------------*)
 type shop_item = {
   name : string;
   effect : string;
@@ -406,6 +420,8 @@ and apply_effects item animal =
   | "nutrition" -> Pet.increase_nutrition animal item.change
   | _ -> ()
 
+
+(* BATTLE --------------------------------------------*)
 let rec battle animal =
   Printf.printf "Welcome to the Pet Battle! Your performance will determine your prize.\n";
   let stages = [
@@ -447,6 +463,73 @@ and reward animal points_accumulated =
   pet.money <- pet.money +. total_prize;
   Printf.printf "Your new balance is $%.2f\n" pet.money
 
+(* MINIGAME --------------------------------------------*)
+
+let signal_handled = ref false
+let continue_simulation = ref true
+
+exception StopSimulation
+
+let instructions earning = 
+  Printf.printf "-------------------------
+Welcome to the minigame!
+-------------------------
+The goal is to try to stop the game using Ctrl+C when you have at least 5 dollar signs. If you do, you'll earn $%s!\n" (string_of_int earning);
+  Printf.printf "Before you begin, adjust your screen size so this line is on the same line:
+  +--------------------------------------------------------------------------------+\n";
+  Printf.printf "Press enter to start the minigame! \n"
+
+let earn animal dollar_signs earning = 
+  if dollar_signs > 4 then begin
+    Printf.printf "Congratulations! You earned $%s!\n" (string_of_int earning);
+    let pet = Pet.to_pet animal in
+    pet.money <- pet.money +. (float_of_int earning);
+  end
+  else     
+    Printf.printf "Unfortunately, you did not get enough dollar signs to earn money.\n" 
+
+  
+
+let rec loop animal earning grid rate generation =
+    Printf.printf "%s%!" (Grid.grid_to_string grid generation);
+    Grid.increasing grid;
+    Unix.sleepf rate;
+    try
+      loop animal earning grid rate (generation + 1);
+    with
+    |StopSimulation ->
+  Printf.printf "%s%!" (Grid.grid_to_string grid (generation+2));
+  let dollar_signs = Grid.count_big grid in
+  print_endline ("You got "^(string_of_int dollar_signs)^" dollar signs.");
+  earn animal dollar_signs earning
+
+
+let setup_signal_handler () = 
+  Sys.set_signal Sys.sigint (Sys.Signal_handle (fun _ ->
+    if not !signal_handled then begin
+      print_endline "\nThanks for playing! Calculating your score.";
+      continue_simulation := false;
+      signal_handled := true;
+      raise StopSimulation
+    end
+  ))
+
+let minigame animal = 
+  continue_simulation := true;
+  signal_handled := false;
+  setup_signal_handler();  
+  let earning = 3 in
+  instructions earning;
+  let _ = read_line () in
+  let arguments = [|10; 20; 10|] in
+  let initial = Grid.empty arguments.(0) arguments.(1) in
+  let fps = arguments.(2) in
+  let rate = 1. /. (float_of_int fps) in
+  loop animal earning initial rate 0
+  
+
+
+(* VET --------------------------------------------*)
 let rec vet animal = 
   let name = Pet.get_name animal in
   Printf.printf "What would you like to treat %s for? Microchip, Fleas, Puking, Fever, Depression\n" name;
@@ -467,16 +550,41 @@ let rec vet animal =
     increase_nutrition animal 2
   | "Fever" -> 
     Printf.printf "The vet gave %s medicine. %s feels better!\n" name name;
-    increase_health animal 3;
+    increase_health animal 3
   | "Depression" ->
     Printf.printf "The vet gave %s antidepressants. %s feel better!\n" name name;
     increase_health animal 3;
     increase_happiness animal 3;
     increase_energy animal 2
   | _ ->
-      Printf.printf "That's not a valid option. Please choose again.\n";
+    Printf.printf "That's not a valid option. Please choose again.\n";
       vet animal
 
+
+(* HELP --------------------------------------------*)      
+let display_help () =
+  Printf.printf "Here is more information about your options!
+  Feed: Choose what to feed your pet
+  Walk: Take your pet for a walk
+  Play: Choose a toy for your pet to play with
+  Clean: Pick a way to clean your pet
+  Nap: Select a place for your pet to take a nap
+  Train: Attempt to train your pet in a way of your choosing
+  Battle: Battle another pet for the chance to earn money
+  Shop: Buy items that can boost your statuses
+  Status: View your pet's health, happiness, energy and nutrition levels and your monetary balance
+  Groom: 
+  Event: 
+  Minigame:
+  Job: 
+  Explore: 
+  Vet: Take your pet to the vet to possibly increase statuses with treatments
+  Socializing: 
+  Help: Look at this menu you're seeing now!\n"
+
+
+
+(* MENU --------------------------------------------*)    
 let rec options animal = 
   display_options Pet.options;
   let choice = read_line () in 
@@ -520,6 +628,10 @@ let rec options animal =
       options animal
     | "Groom" -> options animal;
     | "Event" -> options animal;
+    | "Minigame" -> 
+      minigame animal;
+      status animal;
+      options animal;
     | "Job" -> options animal;
     | "Explore" -> options animal;
     | "Vet" -> 
@@ -527,6 +639,9 @@ let rec options animal =
       status animal;
       options animal;
     | "Socializing" -> options animal;
+    | "Help" -> 
+      display_help ();
+      options animal;
     | "END GAME" -> print_endline "Thank you for playing Pet Simulator. Goodbye!"; 
     exit 0
     | _ -> ()

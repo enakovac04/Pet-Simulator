@@ -9,7 +9,8 @@ type pet = {
   mutable microchip : bool;
 }
 
-let options = ["Feed"; "Walk"; "Play"; "Clean"; "Nap"; "Train"; "Battle"; "Shop"; "Status"; "Groom"; "Event"; "Job"; "Explore"; "Vet"; "Socializing"; "END GAME"]
+let options = ["Feed"; "Walk"; "Play"; "Clean"; "Nap"; "Train"; "Battle"; "Shop"; "Status";
+               "Groom"; "Event"; "Minigame"; "Job"; "Explore"; "Vet"; "Socializing"; "Help"; "END GAME"]
 
 type animal =
   | Camel of pet
