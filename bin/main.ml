@@ -616,7 +616,6 @@ let minigame animal =
   loop animal earning initial rate 0
 
 (* VET --------------------------------------------*)
-(* Vet service costs *)
 let vet_costs =
   [
     ("Microchip", 3.0);
@@ -664,8 +663,6 @@ and process_treatment name treatment cost animal =
       "Not enough money for the treatment of %s. Your balance: $%.2f\n" name
       pet.money;
     vet animal
-    (* Redirect back to vet options to allow for different choices or to
-       cancel *)
   end
 
 and apply_treatment name treatment animal =
@@ -695,6 +692,100 @@ and apply_treatment name treatment animal =
         name
   | _ -> () (* This case should never happen as it's handled earlier *)
 
+(* COOKING GAME --------------------------------------------*)
+type ingredient = {
+  name : string;
+  cooking_methods : string list;
+  side_dishes : string list;
+  vegetables : string list;
+}
+
+let ingredients =
+  [
+    {
+      name = "Chicken";
+      cooking_methods = [ "Grill"; "Bake"; "Fry" ];
+      side_dishes = [ "Rice"; "Mashed Potatoes"; "Pasta" ];
+      vegetables = [ "Carrots"; "Broccoli" ];
+    };
+    {
+      name = "Fish";
+      cooking_methods = [ "Grill"; "Bake"; "Steam" ];
+      side_dishes = [ "Quinoa"; "Vegetables"; "Potatoes" ];
+      vegetables = [ "Peas"; "Spinach" ];
+    };
+  ]
+
+let display_ingredients () =
+  Printf.printf "Ingredients available:\n";
+  List.iteri
+    (fun i ing -> Printf.printf "%d. %s\n" (i + 1) ing.name)
+    ingredients;
+  print_endline ""
+
+let choose_ingredient () =
+  display_ingredients ();
+  Printf.printf "Step 1: Select an ingredient by number:\n> ";
+  let choice = read_int () in
+  List.nth ingredients (choice - 1)
+
+let choose_cooking_method ing =
+  Printf.printf "You chose %s.\nHow would you like to cook it?\n" ing.name;
+  List.iteri
+    (fun i cooking_method -> Printf.printf "%d. %s\n" (i + 1) cooking_method)
+    ing.cooking_methods;
+  Printf.printf "> ";
+  let choice = read_int () in
+  List.nth ing.cooking_methods (choice - 1)
+
+let choose_side_dish ing =
+  Printf.printf "Next, choose a side dish:\n";
+  List.iteri
+    (fun i dish -> Printf.printf "%d. %s\n" (i + 1) dish)
+    ing.side_dishes;
+  Printf.printf "> ";
+  let choice = read_int () in
+  List.nth ing.side_dishes (choice - 1)
+
+let choose_vegetable ing =
+  Printf.printf "Now, add a vegetable:\n";
+  List.iteri (fun i veg -> Printf.printf "%d. %s\n" (i + 1) veg) ing.vegetables;
+  Printf.printf "> ";
+  let choice = read_int () in
+  List.nth ing.vegetables (choice - 1)
+
+let rec cooking_challenge animal =
+  Printf.printf "\nWelcome to the Pet Cooking Challenge!\n\n";
+  Printf.printf
+    "You have been tasked with preparing a delicious meal for your pet. Follow \
+     the instructions carefully to earn coins!\n\n";
+  let selected_ingredient = choose_ingredient () in
+  let cooking_method = choose_cooking_method selected_ingredient in
+  let side = choose_side_dish selected_ingredient in
+  let vegetable = choose_vegetable selected_ingredient in
+  Printf.printf "\nGreat choices! Your meal: %s %s with %s and %s is ready.\n"
+    cooking_method selected_ingredient.name side vegetable;
+  let quality = Random.int 3 + 1 in
+  let coins = quality * 10 in
+  Printf.printf "Judges' Rating: ";
+  (match quality with
+  | 1 -> Printf.printf "Good"
+  | 2 -> Printf.printf "Very Good"
+  | _ -> Printf.printf "Excellent");
+  Printf.printf "\nCoins Earned: %d\n\n" coins;
+
+  let pet = Pet.to_pet animal in
+  pet.money <- pet.money +. float_of_int coins;
+  Printf.printf
+    "Congratulations! You earned %d coins for your pet's meal. New balance: \
+     $%.2f\n"
+    coins pet.money;
+
+  Printf.printf "Do you want to cook another meal? (yes/no)\n> ";
+  match read_line () with
+  | "yes" -> cooking_challenge animal
+  | _ -> Printf.printf "Thanks for playing the Pet Cooking Challenge!\n"
+
 (* HELP --------------------------------------------*)
 let display_help () =
   Printf.printf
@@ -710,6 +801,7 @@ let display_help () =
     \  Status: View your pet's health, happiness, energy and nutrition levels \
      and your monetary balance\n\
     \  Ride: Take a ride on your pet\n\
+    \  Cooking: Play a cooking game to earn money\n\
     \  Groom: \n\
     \  Event: \n\
     \  Minigame: Play a chance minigame where you try to collect dollar signs \
@@ -780,6 +872,10 @@ let rec options animal =
           status animal;
           options animal
       | "Socializing" -> options animal
+      | "Cooking" ->
+          cooking_challenge animal;
+          status animal;
+          options animal
       | "Help" ->
           display_help ();
           options animal
