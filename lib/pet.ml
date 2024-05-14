@@ -30,6 +30,7 @@ let options =
     "Socializing";
     "Cooking";
     "Help";
+    "Blackjack";
     "END GAME";
   ]
 

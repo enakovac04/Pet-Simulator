@@ -786,6 +786,60 @@ let rec cooking_challenge animal =
   | "yes" -> cooking_challenge animal
   | _ -> Printf.printf "Thanks for playing the Pet Cooking Challenge!\n"
 
+(* BLACKJACK --------------------------------------------*)
+
+(* BLACKJACK GAME --------------------------------------------*)
+let play_blackjack animal bet =
+  let pet = Pet.to_pet animal in
+  if bet > pet.money then
+    Printf.printf "You do not have enough coins. Try again.\n"
+  else begin
+    let simulate_dealer player_hand =
+      let dealer_hand = ref 0 in
+      while !dealer_hand < 17 do
+        dealer_hand := !dealer_hand + (Random.int 10 + 1)
+      done;
+      Printf.printf "Dealer's hand is %d.\n" !dealer_hand;
+      if !dealer_hand > 21 || !dealer_hand < player_hand then (
+        Printf.printf
+          "You win! Dealer busted or has less than your hand. You gain %d coins.\n"
+          (int_of_float bet);
+        pet.money <- pet.money +. bet)
+      else if !dealer_hand > player_hand then (
+        Printf.printf
+          "Dealer wins with %d against your %d. You lose %d coins.\n"
+          !dealer_hand player_hand (int_of_float bet);
+        pet.money <- pet.money -. bet)
+      else Printf.printf "It's a draw. No coins are lost or gained.\n"
+    in
+
+    let rec blackjack_turn hand =
+      Printf.printf "Your hand value is %d. Hit or stay? (h/s)\n" hand;
+      match read_line () with
+      | "h" ->
+          let new_card = Random.int 10 + 1 in
+          Printf.printf "You drew a %d.\n" new_card;
+          let new_hand = hand + new_card in
+          if new_hand > 21 then (
+            Printf.printf "Busted! You lose your bet of %d coins.\n"
+              (int_of_float bet);
+            pet.money <- pet.money -. bet)
+          else if new_hand = 21 then (
+            Printf.printf "You hit 21! You win and gain %d coins.\n"
+              (int_of_float bet);
+            pet.money <- pet.money +. bet)
+          else blackjack_turn new_hand
+      | "s" -> simulate_dealer hand
+      | _ ->
+          Printf.printf
+            "Invalid input. Please type 'h' for hit or 's' for stay.\n";
+          blackjack_turn hand
+    in
+
+    pet.money <- pet.money -. bet;
+    blackjack_turn 0
+  end
+
 (* HELP --------------------------------------------*)
 let display_help () =
   Printf.printf
@@ -802,6 +856,7 @@ let display_help () =
      and your monetary balance\n\
     \  Ride: Take a ride on your pet\n\
     \  Cooking: Play a cooking game to earn money\n\
+    \  Blackjack: Play a game of blackjack to earn money\n\
     \  Groom: \n\
     \  Event: \n\
     \  Minigame: Play a chance minigame where you try to collect dollar signs \
@@ -874,6 +929,12 @@ let rec options animal =
       | "Socializing" -> options animal
       | "Cooking" ->
           cooking_challenge animal;
+          status animal;
+          options animal
+      | "Blackjack" ->
+          let () = Printf.printf "Enter your bet: " in
+          let bet = float_of_string (read_line ()) in
+          play_blackjack animal bet;
           status animal;
           options animal
       | "Help" ->
