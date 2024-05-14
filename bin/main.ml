@@ -840,6 +840,174 @@ let play_blackjack animal bet =
     blackjack_turn 0
   end
 
+(* TRIVIA --------------------------------------------*)
+
+type trivia = {
+  question : string;
+  answer : string;
+}
+
+let trivia_questions =
+  [
+    {
+      question = "What is the largest planet in our solar system?";
+      answer = "Jupiter";
+    };
+    { question = "What year did the Titanic sink?"; answer = "1912" };
+    {
+      question = "What is the normal body temperature for a dog? (in Celsius)";
+      answer = "38";
+    };
+    { question = "How many legs does a spider have?"; answer = "8" };
+    { question = "Who wrote 'To Kill a Mockingbird'?"; answer = "Harper Lee" };
+    { question = "What is the capital of France?"; answer = "Paris" };
+    { question = "What chemical element has the symbol O?"; answer = "Oxygen" };
+    {
+      question = "In what year did the First World War begin?";
+      answer = "1914";
+    };
+    { question = "What is the largest ocean on Earth?"; answer = "Pacific" };
+    {
+      question = "What is the hardest natural substance on Earth?";
+      answer = "Diamond";
+    };
+    { question = "What planet is known as the Red Planet?"; answer = "Mars" };
+    { question = "Who painted the Mona Lisa?"; answer = "Leonardo da Vinci" };
+    { question = "What is the smallest breed of dog?"; answer = "Chihuahua" };
+    {
+      question = "What is the main ingredient in guacamole?";
+      answer = "Avocado";
+    };
+    { question = "How many hearts does an octopus have?"; answer = "Three" };
+    { question = "What is the longest river in the world?"; answer = "Nile" };
+    { question = "What is the fastest land animal?"; answer = "Cheetah" };
+    { question = "What year was the first iPhone released?"; answer = "2007" };
+    { question = "Who wrote 'Pride and Prejudice'?"; answer = "Jane Austen" };
+    {
+      question = "What is the tallest breed of dog in the world?";
+      answer = "Great Dane";
+    };
+    { question = "What color is a giraffe's tongue?"; answer = "Blue" };
+    {
+      question = "What gas do plants absorb from the atmosphere?";
+      answer = "Carbon dioxide";
+    };
+    {
+      question = "What is the smallest planet in our solar system?";
+      answer = "Mercury";
+    };
+    { question = "What year did World War II end?"; answer = "1945" };
+    { question = "Who discovered penicillin?"; answer = "Alexander Fleming" };
+    { question = "What is the capital of Canada?"; answer = "Ottawa" };
+    { question = "Who wrote '1984'?"; answer = "George Orwell" };
+    { question = "What is the chemical symbol for gold?"; answer = "Au" };
+    { question = "What year did the Berlin Wall fall?"; answer = "1989" };
+    { question = "How many valves does the heart have?"; answer = "4" };
+    {
+      question = "What is the largest bird of prey in the world?";
+      answer = "Andean condor";
+    };
+    { question = "What organ can regenerate tissue?"; answer = "Liver" };
+    {
+      question =
+        "What is the main ingredient in traditional Japanese miso soup?";
+      answer = "Soy";
+    };
+    { question = "What element is diamond made of?"; answer = "Carbon" };
+    {
+      question = "What year did Albert Einstein win the Nobel Prize in Physics?";
+      answer = "1921";
+    };
+    {
+      question = "What is the longest-running Broadway show of all time?";
+      answer = "The Phantom of the Opera";
+    };
+    {
+      question = "Who invented the telephone?";
+      answer = "Alexander Graham Bell";
+    };
+    {
+      question = "What is the gestation period of an African elephant?";
+      answer = "22 months";
+    };
+    { question = "Which planet is closest to the sun?"; answer = "Mercury" };
+    {
+      question = "What is the smallest bone in the human body?";
+      answer = "Stapes";
+    };
+    {
+      question = "Who painted 'The Starry Night'?";
+      answer = "Vincent van Gogh";
+    };
+    {
+      question = "What is the most abundant gas in the Earth's atmosphere?";
+      answer = "Nitrogen";
+    };
+    {
+      question = "Who is known as the father of modern physics?";
+      answer = "Galileo Galilei";
+    };
+    { question = "What year did the American Civil War end?"; answer = "1865" };
+    {
+      question = "What is the hardest known natural material on Earth?";
+      answer = "Diamond";
+    };
+    { question = "Who wrote 'Les Misérables'?"; answer = "Victor Hugo" };
+    { question = "What is the capital of Iceland?"; answer = "Reykjavik" };
+    {
+      question =
+        "What vitamin is produced when a person is exposed to sunlight?";
+      answer = "Vitamin D";
+    };
+    { question = "What is the study of mushrooms called?"; answer = "Mycology" };
+    {
+      question = "Which animal has the highest blood pressure?";
+      answer = "Giraffe";
+    };
+    {
+      question = "What is the name of the largest ocean on Earth?";
+      answer = "Pacific Ocean";
+    };
+    {
+      question = "Who discovered gravity when he saw a falling apple?";
+      answer = "Isaac Newton";
+    };
+    {
+      question = "What is the most spoken language in the world?";
+      answer = "Mandarin";
+    };
+    {
+      question =
+        "What animal is known to have the most powerful bite in the world?";
+      answer = "Saltwater crocodile";
+    };
+    {
+      question = "What is the longest river in the world?";
+      answer = "Amazon River";
+    };
+  ]
+
+let rec quiz_show animal questions =
+  match questions with
+  | [] -> Printf.printf "End of the quiz! Thanks for playing.\n"
+  | { question; answer } :: rest ->
+      Printf.printf "%s\nType your answer or 'exit' to quit:\n> " question;
+      let user_response = read_line () in
+      if String.lowercase_ascii user_response = "exit" then
+        Printf.printf "Exiting quiz show. Thank you for playing!\n"
+      else if
+        String.lowercase_ascii user_response = String.lowercase_ascii answer
+      then (
+        Printf.printf "Correct!\n";
+        let pet = Pet.to_pet animal in
+        pet.money <- pet.money +. 1.0;
+        quiz_show animal rest)
+      else (
+        Printf.printf "Incorrect. The correct answer was '%s'.\n" answer;
+        let pet = Pet.to_pet animal in
+        if pet.money > 0.0 then pet.money <- pet.money -. 1.0;
+        quiz_show animal rest)
+
 (* HELP --------------------------------------------*)
 let display_help () =
   Printf.printf
@@ -857,6 +1025,7 @@ let display_help () =
     \  Ride: Take a ride on your pet\n\
     \  Cooking: Play a cooking game to earn money\n\
     \  Blackjack: Play a game of blackjack to earn money\n\
+    \  Trivia: Play trivia to earn money\n\
     \  Groom: \n\
     \  Event: \n\
     \  Minigame: Play a chance minigame where you try to collect dollar signs \
@@ -939,6 +1108,13 @@ let rec options animal =
           options animal
       | "Help" ->
           display_help ();
+          options animal
+      | "Trivia" ->
+          print_endline
+            "For every question you answer correctly, you earn $1, and for \
+             every question you answer incorrectly, you lose $1";
+          quiz_show animal trivia_questions;
+          status animal;
           options animal
       | "END GAME" ->
           print_endline "Thank you for playing Pet Simulator. Goodbye!";
