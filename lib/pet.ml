@@ -16,22 +16,17 @@ let options =
     "Play";
     "Clean";
     "Nap";
+    "Ride";
+    "Vet";
     "Train";
     "Battle";
+    "Chance Game";
+    "Blackjack Game";
+    "Cooking Game";
+    "Trivia Game";
     "Shop";
     "Status";
-    "Ride";
-    "Groom";
-    "Event";
-    "Minigame";
-    "Job";
-    "Explore";
-    "Vet";
-    "Socializing";
-    "Cooking";
     "Help";
-    "Blackjack";
-    "Trivia";
     "END GAME";
   ]
 
