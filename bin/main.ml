@@ -1,4 +1,5 @@
 open Cs_final
+open Batteries
 
 let rec game_start () =
   let () = print_string "Would you like to enter Pet Simulator? Y/N: " in
@@ -97,7 +98,7 @@ let rec feed animal =
   let food = read_line () in
   match (food, animal) with
   | "Chocolate", Pet.Dog _ ->
-      Printf.printf "Your dog %s ate chocolate and threw upk.\n" name;
+      Printf.printf "Your dog %s ate chocolate and threw up.\n" name;
       decrease_nutrition animal 2;
       decrease_health animal 2
   | "Chocolate", _ ->
@@ -606,7 +607,7 @@ let minigame animal =
   continue_simulation := true;
   signal_handled := false;
   setup_signal_handler ();
-  let earning = 3 in
+  let earning = 5 in
   instructions earning;
   let _ = read_line () in
   let arguments = [| 10; 20; 8 |] in
@@ -758,7 +759,7 @@ let rec cooking_challenge animal =
   Printf.printf "\nWelcome to the Pet Cooking Challenge!\n\n";
   Printf.printf
     "You have been tasked with preparing a delicious meal for your pet. Follow \
-     the instructions carefully to earn coins!\n\n";
+     the instructions carefully to earn money!\n\n";
   let selected_ingredient = choose_ingredient () in
   let cooking_method = choose_cooking_method selected_ingredient in
   let side = choose_side_dish selected_ingredient in
@@ -766,20 +767,20 @@ let rec cooking_challenge animal =
   Printf.printf "\nGreat choices! Your meal: %s %s with %s and %s is ready.\n"
     cooking_method selected_ingredient.name side vegetable;
   let quality = Random.int 3 + 1 in
-  let coins = quality * 10 in
+  let money = quality in
   Printf.printf "Judges' Rating: ";
   (match quality with
   | 1 -> Printf.printf "Good"
   | 2 -> Printf.printf "Very Good"
   | _ -> Printf.printf "Excellent");
-  Printf.printf "\nCoins Earned: %d\n\n" coins;
+  Printf.printf "\nMoney Earned: $%d\n\n" money;
 
   let pet = Pet.to_pet animal in
-  pet.money <- pet.money +. float_of_int coins;
+  pet.money <- pet.money +. float_of_int money;
   Printf.printf
-    "Congratulations! You earned %d coins for your pet's meal. New balance: \
+    "Congratulations! You earned $%d for your pet's meal. New balance: \
      $%.2f\n"
-    coins pet.money;
+    money pet.money;
 
   Printf.printf "Do you want to cook another meal? (yes/no)\n> ";
   match read_line () with
@@ -792,7 +793,7 @@ let rec cooking_challenge animal =
 let play_blackjack animal bet =
   let pet = Pet.to_pet animal in
   if bet > pet.money then
-    Printf.printf "You do not have enough coins. Try again.\n"
+    Printf.printf "You do not have enough money. Try again.\n"
   else begin
     let simulate_dealer player_hand =
       let dealer_hand = ref 0 in
@@ -802,15 +803,15 @@ let play_blackjack animal bet =
       Printf.printf "Dealer's hand is %d.\n" !dealer_hand;
       if !dealer_hand > 21 || !dealer_hand < player_hand then (
         Printf.printf
-          "You win! Dealer busted or has less than your hand. You gain %d coins.\n"
+          "You win! Dealer busted or has less than your hand. You gain $%d.\n"
           (int_of_float bet);
         pet.money <- pet.money +. bet)
       else if !dealer_hand > player_hand then (
         Printf.printf
-          "Dealer wins with %d against your %d. You lose %d coins.\n"
+          "Dealer wins with %d against your %d. You lose $%d.\n"
           !dealer_hand player_hand (int_of_float bet);
         pet.money <- pet.money -. bet)
-      else Printf.printf "It's a draw. No coins are lost or gained.\n"
+      else Printf.printf "It's a draw. No money is lost or gained.\n"
     in
 
     let rec blackjack_turn hand =
@@ -821,11 +822,11 @@ let play_blackjack animal bet =
           Printf.printf "You drew a %d.\n" new_card;
           let new_hand = hand + new_card in
           if new_hand > 21 then (
-            Printf.printf "Busted! You lose your bet of %d coins.\n"
+            Printf.printf "Busted! You lose your bet of $%d.\n"
               (int_of_float bet);
             pet.money <- pet.money -. bet)
           else if new_hand = 21 then (
-            Printf.printf "You hit 21! You win and gain %d coins.\n"
+            Printf.printf "You hit 21! You win and gain $%d.\n"
               (int_of_float bet);
             pet.money <- pet.money +. bet)
           else blackjack_turn new_hand
@@ -849,143 +850,118 @@ type trivia = {
 
 let trivia_questions =
   [
-    {
-      question = "What is the largest planet in our solar system?";
-      answer = "Jupiter";
-    };
-    { question = "What year did the Titanic sink?"; answer = "1912" };
-    {
-      question = "What is the normal body temperature for a dog? (in Celsius)";
-      answer = "38";
-    };
-    { question = "How many legs does a spider have?"; answer = "8" };
-    { question = "Who wrote 'To Kill a Mockingbird'?"; answer = "Harper Lee" };
-    { question = "What is the capital of France?"; answer = "Paris" };
-    { question = "What chemical element has the symbol O?"; answer = "Oxygen" };
-    {
-      question = "In what year did the First World War begin?";
-      answer = "1914";
-    };
-    { question = "What is the largest ocean on Earth?"; answer = "Pacific" };
-    {
-      question = "What is the hardest natural substance on Earth?";
-      answer = "Diamond";
-    };
-    { question = "What planet is known as the Red Planet?"; answer = "Mars" };
-    { question = "Who painted the Mona Lisa?"; answer = "Leonardo da Vinci" };
-    { question = "What is the smallest breed of dog?"; answer = "Chihuahua" };
-    {
-      question = "What is the main ingredient in guacamole?";
-      answer = "Avocado";
-    };
-    { question = "How many hearts does an octopus have?"; answer = "Three" };
-    { question = "What is the longest river in the world?"; answer = "Nile" };
-    { question = "What is the fastest land animal?"; answer = "Cheetah" };
-    { question = "What year was the first iPhone released?"; answer = "2007" };
-    { question = "Who wrote 'Pride and Prejudice'?"; answer = "Jane Austen" };
-    {
-      question = "What is the tallest breed of dog in the world?";
-      answer = "Great Dane";
-    };
-    { question = "What color is a giraffe's tongue?"; answer = "Blue" };
-    {
-      question = "What gas do plants absorb from the atmosphere?";
-      answer = "Carbon dioxide";
-    };
-    {
-      question = "What is the smallest planet in our solar system?";
-      answer = "Mercury";
-    };
-    { question = "What year did World War II end?"; answer = "1945" };
-    { question = "Who discovered penicillin?"; answer = "Alexander Fleming" };
-    { question = "What is the capital of Canada?"; answer = "Ottawa" };
-    { question = "Who wrote '1984'?"; answer = "George Orwell" };
-    { question = "What is the chemical symbol for gold?"; answer = "Au" };
-    { question = "What year did the Berlin Wall fall?"; answer = "1989" };
-    { question = "How many valves does the heart have?"; answer = "4" };
-    {
-      question = "What is the largest bird of prey in the world?";
-      answer = "Andean condor";
-    };
-    { question = "What organ can regenerate tissue?"; answer = "Liver" };
-    {
-      question =
-        "What is the main ingredient in traditional Japanese miso soup?";
-      answer = "Soy";
-    };
-    { question = "What element is diamond made of?"; answer = "Carbon" };
-    {
-      question = "What year did Albert Einstein win the Nobel Prize in Physics?";
-      answer = "1921";
-    };
-    {
-      question = "What is the longest-running Broadway show of all time?";
-      answer = "The Phantom of the Opera";
-    };
-    {
-      question = "Who invented the telephone?";
-      answer = "Alexander Graham Bell";
-    };
-    {
-      question = "What is the gestation period of an African elephant?";
-      answer = "22 months";
-    };
-    { question = "Which planet is closest to the sun?"; answer = "Mercury" };
-    {
-      question = "What is the smallest bone in the human body?";
-      answer = "Stapes";
-    };
-    {
-      question = "Who painted 'The Starry Night'?";
-      answer = "Vincent van Gogh";
-    };
-    {
-      question = "What is the most abundant gas in the Earth's atmosphere?";
-      answer = "Nitrogen";
-    };
-    {
-      question = "Who is known as the father of modern physics?";
-      answer = "Galileo Galilei";
-    };
-    { question = "What year did the American Civil War end?"; answer = "1865" };
-    {
-      question = "What is the hardest known natural material on Earth?";
-      answer = "Diamond";
-    };
-    { question = "Who wrote 'Les Misérables'?"; answer = "Victor Hugo" };
-    { question = "What is the capital of Iceland?"; answer = "Reykjavik" };
-    {
-      question =
-        "What vitamin is produced when a person is exposed to sunlight?";
-      answer = "Vitamin D";
-    };
-    { question = "What is the study of mushrooms called?"; answer = "Mycology" };
-    {
-      question = "Which animal has the highest blood pressure?";
-      answer = "Giraffe";
-    };
-    {
-      question = "What is the name of the largest ocean on Earth?";
-      answer = "Pacific Ocean";
-    };
-    {
-      question = "Who discovered gravity when he saw a falling apple?";
-      answer = "Isaac Newton";
-    };
-    {
-      question = "What is the most spoken language in the world?";
-      answer = "Mandarin";
-    };
-    {
-      question =
-        "What animal is known to have the most powerful bite in the world?";
-      answer = "Saltwater crocodile";
-    };
-    {
-      question = "What is the longest river in the world?";
-      answer = "Amazon River";
-    };
+    { question = "What is the largest planet in our solar system?";
+      answer = "Jupiter"};
+    { question = "What year did the Titanic sink?";
+     answer = "1912"};
+    { question = "What is the normal body temperature for a dog? (in Celsius)";
+      answer = "38"};
+    { question = "How many legs does a spider have?"; 
+      answer = "8" };
+    { question = "Who wrote 'To Kill a Mockingbird'?";
+      answer = "Harper Lee" };
+    { question = "What is the capital of France?"; 
+      answer = "Paris" };
+    { question = "What chemical element has the symbol O?"; 
+      answer = "Oxygen" };
+    { question = "In what year did the First World War begin?";
+      answer = "1914"};
+    { question = "What is the largest ocean on Earth?"; 
+      answer = "Pacific" };
+    { question = "What is the hardest natural substance on Earth?";
+      answer = "Diamond"};
+    { question = "What planet is known as the Red Planet?"; 
+      answer = "Mars" };
+    { question = "Who painted the Mona Lisa?"; 
+      answer = "Leonardo da Vinci" };
+    { question = "What is the smallest breed of dog?"; 
+      answer = "Chihuahua" };
+    { question = "What is the main ingredient in guacamole?";
+      answer = "Avocado"};
+    { question = "How many hearts does an octopus have?"; 
+      answer = "Three" };
+    { question = "What is the longest river in the world?"; 
+      answer = "Nile" };
+    { question = "What is the fastest land animal?"; 
+      answer = "Cheetah" };
+    { question = "What year was the first iPhone released?"; 
+      answer = "2007"};
+    { question = "Who wrote 'Pride and Prejudice'?"; 
+      answer = "Jane Austen" };
+    { question = "What is the tallest breed of dog in the world?";
+      answer = "Great Dane"};
+    { question = "What color is a giraffe's tongue?"; 
+      answer = "Blue" };
+    { question = "What gas do plants absorb from the atmosphere?";
+      answer = "Carbon dioxide"};
+    { question = "What is the smallest planet in our solar system?";
+      answer = "Mercury"};
+    { question = "What year did World War II end?"; 
+      answer = "1945" };
+    { question = "Who discovered penicillin?"; 
+      answer = "Alexander Fleming"};
+    { question = "What is the capital of Canada?"; 
+      answer = "Ottawa"};
+    { question = "Who wrote '1984'?"; 
+      answer = "George Orwell"};
+    { question = "What is the chemical symbol for gold?"; 
+      answer = "Au" };
+    { question = "What year did the Berlin Wall fall?"; 
+      answer = "1989" };
+    { question = "How many valves does the heart have?"; 
+      answer = "4" };
+    { question = "What is the largest bird of prey in the world?";
+      answer = "Andean condor"};
+    { question = "What organ can regenerate tissue?"; 
+      answer = "Liver"};
+    { question = "What is the main ingredient in traditional Japanese miso soup?";
+      answer = "Soy"};
+    { question = "What element is diamond made of?"; 
+      answer = "Carbon" };
+    { question = "What year did Albert Einstein win the Nobel Prize in Physics?";
+      answer = "1921"};
+    { question = "What is the longest-running Broadway show of all time?";
+      answer = "The Phantom of the Opera"};
+    { question = "Who invented the telephone?";
+      answer = "Alexander Graham Bell"};
+    { question = "What is the gestation period of an African elephant?";
+      answer = "22 months"};
+    { question = "Which planet is closest to the sun?"; 
+      answer = "Mercury" };
+    { question = "What is the smallest bone in the human body?";
+      answer = "Stapes"};
+    { question = "Who painted 'The Starry Night'?";
+      answer = "Vincent van Gogh"};
+    { question = "What is the most abundant gas in the Earth's atmosphere?";
+      answer = "Nitrogen"};
+    { question = "Who is known as the father of modern physics?";
+      answer = "Galileo Galilei"};
+    { question = "What year did the American Civil War end?"; 
+      answer = "1865" };
+    { question = "What is the hardest known natural material on Earth?";
+      answer = "Diamond"};(*duplicate*)
+    { question = "Who wrote 'Les Misérables'?"; 
+      answer = "Victor Hugo" };
+    { question = "What is the capital of Iceland?"; 
+      answer = "Reykjavik"};
+    { question =  "What vitamin is produced when a person is exposed to sunlight?";
+      answer = "Vitamin D"};
+    { question = "What is the study of mushrooms called?"; 
+      answer = "Mycology"};
+    { question = "Which animal has the highest blood pressure?";
+      answer = "Giraffe"};
+    { question = "What is the name of the largest ocean on Earth?";
+      answer = "Pacific Ocean" (*duplicate*)};
+    { question = "Who discovered gravity when he saw a falling apple?";
+      answer = "Isaac Newton"};
+    { question = "What is the most spoken language in the world?";
+      answer = "Mandarin"};
+    { question =  "What animal is known to have the most powerful bite in the world?";
+      answer = "Saltwater crocodile"};
+    { question = "What is the second longest river in the world?";
+      answer = "Amazon River"};
   ]
+
 
 let rec quiz_show animal questions =
   match questions with
@@ -1038,7 +1014,7 @@ let display_help () =
     \  Help: Look at this menu you're seeing now!\n"
 
 (* MENU --------------------------------------------*)
-let rec options animal =
+let rec options animal count =
   display_options Pet.options;
   let choice = read_line () in
   match choice with
@@ -1046,76 +1022,99 @@ let rec options animal =
       match choice with
       | "Feed" ->
           feed animal;
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
+          options animal (count + 1)
       | "Walk" ->
-          walk animal;
+        walk animal;
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
+          options animal (count + 1)
       | "Play" ->
-          play animal;
+        play animal;  
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
+          options animal (count + 1)
       | "Clean" ->
           clean animal;
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
+          options animal (count + 1)
       | "Nap" ->
           nap animal;
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
+          options animal (count + 1)
       | "Train" ->
           train animal;
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
+          options animal (count + 1)
       | "Battle" ->
           battle animal;
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
+          options animal (count + 1)
       | "Shop" ->
           shop animal;
           status animal;
-          options animal
+          options animal (count + 1)
       | "Status" ->
           status animal;
-          options animal
+          options animal (count + 1)
       | "Ride" ->
           ride animal;
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
-      | "Groom" -> options animal
-      | "Event" -> options animal
+          options animal (count + 1)
+      | "Groom" -> 
+          if count mod 3 = 0 then decrease_nutrition animal 1;
+          options animal (count + 1)
+      | "Event" -> 
+          if count mod 3 = 0 then decrease_nutrition animal 1;
+          options animal (count + 1)
       | "Minigame" ->
           minigame animal;
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
-      | "Job" -> options animal
-      | "Explore" -> options animal
+          options animal (count + 1)
+      | "Job" -> 
+          if count mod 3 = 0 then decrease_nutrition animal 1;
+          options animal (count + 1)
+      | "Explore" -> 
+          if count mod 3 = 0 then decrease_nutrition animal 1;
+          options animal (count + 1)
       | "Vet" ->
           vet animal;
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
-      | "Socializing" -> options animal
+          options animal (count + 1)
+      | "Socializing" -> 
+          if count mod 3 = 0 then decrease_nutrition animal 1;
+          options animal (count + 1)
       | "Cooking" ->
           cooking_challenge animal;
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
+          options animal (count + 1)
       | "Blackjack" ->
-          let () = Printf.printf "Enter your bet: " in
+          let () = Printf.printf "Enter your bet ($): " in
           let bet = float_of_string (read_line ()) in
           play_blackjack animal bet;
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
+          options animal (count + 1)
       | "Help" ->
           display_help ();
-          options animal
+          options animal (count + 1)
       | "Trivia" ->
           print_endline
             "For every question you answer correctly, you earn $1, and for \
              every question you answer incorrectly, you lose $1";
-          quiz_show animal trivia_questions;
+          quiz_show animal (List.shuffle trivia_questions);
+          if count mod 3 = 0 then decrease_nutrition animal 1;
           status animal;
-          options animal
+          options animal (count + 1)
       | "END GAME" ->
           print_endline "Thank you for playing Pet Simulator. Goodbye!";
           exit 0
@@ -1123,7 +1122,7 @@ let rec options animal =
     end
   | _ ->
       print_endline "Invalid option, please try again.";
-      options animal
+      options animal (count + 1)
 
 let rec game_select_animal () =
   let () = print_endline "Which animal would you like to select?\nDog  Camel" in
@@ -1138,6 +1137,6 @@ let game_output () =
   game_start ();
   let animal = game_select_animal () in
   print_endline (Pet.status_to_string animal);
-  options animal
+  options animal 1
 
 let () = game_output ()
