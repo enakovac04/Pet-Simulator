@@ -1009,92 +1009,51 @@ let display_help () =
     \  Help: Look at this menu you're seeing now!\n"
 
 (* MENU --------------------------------------------*)
+
+let nutrition_loss animal count = if count mod 3 = 0 then decrease_nutrition animal 1
+
 let rec options animal count =
   display_options Pet.options;
   let choice = read_line () in
   match choice with
   | choice when List.mem choice Pet.options -> begin
       match choice with
-      | "Feed" ->
-          feed animal;
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
-      | "Walk" ->
-        walk animal;
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
-      | "Play" ->
-        play animal;  
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
-      | "Clean" ->
-          clean animal;
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
-      | "Nap" ->
-          nap animal;
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
-      | "Train" ->
-          train animal;
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
-      | "Battle" ->
-          battle animal;
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
-      | "Shop" ->
-          shop animal;
-          status animal;
-          options animal (count + 1)
-      | "Status" ->
-          status animal;
-          options animal (count + 1)
-      | "Ride" ->
-          ride animal;
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
-      | "Chance Game" ->
-          minigame animal;
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
-      | "Vet" ->
-          vet animal;
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
-      | "Cooking Game" ->
-          cooking_challenge animal;
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
+      | "Feed" -> feed animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Walk" -> walk animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Play" -> play animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Clean" -> clean animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Nap" -> nap animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Train" -> train animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Battle" -> battle animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Shop" -> shop animal; status animal; options animal (count + 1)
+      | "Status" -> status animal; options animal (count + 1)
+      | "Ride" -> ride animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Chance Game" -> minigame animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Vet" -> vet animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Cooking Game" ->  cooking_challenge animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
       | "Blackjack Game" ->
           let () = Printf.printf "Enter your bet ($): " in
           let bet = float_of_string (read_line ()) in
-          play_blackjack animal bet;
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
-      | "Help" ->
-          display_help ();
-          options animal (count + 1)
+          play_blackjack animal bet; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Help" -> display_help (); options animal (count + 1)
       | "Trivia Game" ->
           print_endline
             "For every question you answer correctly, you earn $1, and for \
              every question you answer incorrectly, you lose $1";
-          quiz_show animal (List.shuffle trivia_questions);
-          if count mod 3 = 0 then decrease_nutrition animal 1;
-          status animal;
-          options animal (count + 1)
+          quiz_show animal (List.shuffle trivia_questions); nutrition_loss animal count;
+          status animal; options animal (count + 1)
       | "END GAME" ->
           print_endline "Thank you for playing Pet Simulator. Goodbye!";
           exit 0
