@@ -1,10 +1,11 @@
 open Cs_final
+open Batteries
 
 let rec game_start () =
   let () = print_string "Would you like to enter Pet Simulator? Y/N: " in
-  match read_line () with
-  | "Y" -> print_endline "Welcome to Pet Simulator!"
-  | "N" ->
+  match String.lowercase_ascii (read_line ()) with
+  | "y" -> print_endline "Welcome to Pet Simulator!"
+  | "n" ->
       print_endline "Please play the game!";
       game_start ()
   | _ ->
@@ -32,9 +33,9 @@ let decrease_health animal amount =
   if health = 0 then (
     Printf.printf "%s reached 0 health and has passed away." name;
     exit 0)
-  else if health < 3 then
+  else if health < 3 then(
     Printf.printf "%s has poor health and has been diagnosed with a fever.\n"
-      name
+      name; (Pet.add_sickness animal "Fever"))
   else Printf.printf "-%i health \n" amount
 
 let increase_health animal amount =
@@ -53,7 +54,8 @@ let decrease_happiness animal amount =
     Printf.printf "%s reached 0 happiness and went to find a better owner." name;
     exit 0)
   else if happiness < 3 then
-    Printf.printf "%s is unhappy and has been diagnosed with depression.\n" name
+    (Printf.printf "%s is unhappy and has been diagnosed with depression.\n" name;
+    Pet.add_sickness animal "Depression")
   else Printf.printf "-%i happiness \n" amount
 
 let increase_energy animal amount =
@@ -93,64 +95,43 @@ let status animal = Printf.printf "%s \n" (Pet.status_to_string animal)
 let rec feed animal =
   let name = Pet.get_name animal in
   Printf.printf
-    "Choose what food to feed %s: Chocolate, Grapes, Cheese, Pork, Fish\n" name;
-  let food = read_line () in
+ "Choose what food to feed %s: Chocolate, Grapes, Cheese, Pork, Fish\n" name;
+  let food = String.lowercase_ascii (read_line ()) in
   match (food, animal) with
-  | "Chocolate", Pet.Dog _ ->
-      Printf.printf "Your dog %s ate chocolate and threw upk.\n" name;
-      decrease_nutrition animal 2;
-      decrease_health animal 2
-  | "Chocolate", _ ->
-      Printf.printf "Luckily, your pet %s can eat chocolate safely.\n" name
-  | "Grapes", Pet.Dog _ ->
-      Printf.printf "Your dog %s ate grapes and threw up.\n" name;
-      decrease_nutrition animal 2;
-      decrease_health animal 2
-  | "Grapes", _ ->
-      Printf.printf "Luckily, your pet %s can eat grapes safely. \n" name
-  | "Cheese", _ ->
-      Printf.printf "%s enjoyed the cheese. \n" name;
-      increase_nutrition animal 2;
-      increase_health animal 1
-  | "Pork", _ ->
-      Printf.printf "%s enjoyed the pork. \n" name;
-      increase_nutrition animal 2;
-      increase_health animal 1
-  | "Fish", _ ->
-      Printf.printf "%s enjoyed the fish. \n" name;
-      increase_nutrition animal 2;
-      increase_health animal 1
-  | _, _ ->
-      print_endline "Not one of the options\n";
-      feed animal
+  | "chocolate", Pet.Dog _ -> Printf.printf "Your dog %s ate chocolate and threw up.\n" name;
+      Pet.add_sickness animal "Puking";
+      decrease_nutrition animal 2; decrease_health animal 2
+  | "chocolate", _ -> Printf.printf "Luckily, your pet %s can eat chocolate safely.\n" name
+  | "grapes", Pet.Dog _ -> Printf.printf "Your dog %s ate grapes and threw up.\n" name;
+      Pet.add_sickness animal "Puking";
+      decrease_nutrition animal 2; decrease_health animal 2
+  | "grapes", _ -> Printf.printf "Luckily, your pet %s can eat grapes safely. \n" name
+  | "cheese", _ -> Printf.printf "%s enjoyed the cheese. \n" name;
+      increase_nutrition animal 2; increase_health animal 1
+  | "pork", _ -> Printf.printf "%s enjoyed the pork. \n" name;
+      increase_nutrition animal 2; increase_health animal 1
+  | "fish", _ -> Printf.printf "%s enjoyed the fish. \n" name;
+      increase_nutrition animal 2; increase_health animal 1
+  | _, _ -> print_endline "Not one of the options\n";  feed animal
 
 (* PLAY --------------------------------------------*)
 let rec play animal =
   let name = Pet.get_name animal in
   Printf.printf "Choose a toy to play with %s: Ball Rope Bone Trash\n" name;
-  let toy = read_line () in
+  let toy = String.lowercase_ascii (read_line ()) in
   match (toy, animal) with
-  | "Ball", _ ->
-      Printf.printf "%s loved the toy! \n" name;
-      increase_happiness animal 2;
-      decrease_energy animal 1
-  | "Rope", _ ->
-      Printf.printf "%s loved the toy! \n" name;
-      increase_happiness animal 2;
-      decrease_energy animal 1
-  | "Bone", Pet.Dog _ ->
-      Printf.printf "%s loved the toy! \n" name;
-      increase_happiness animal 2;
-      decrease_energy animal 1
-  | "Bone", _ ->
-      Printf.printf "%s did not like the toy. \n" name;
+  | "ball", _ -> Printf.printf "%s loved the toy! \n" name;
+      increase_happiness animal 2; decrease_energy animal 1
+  | "rope", _ -> Printf.printf "%s loved the toy! \n" name;
+      increase_happiness animal 2; decrease_energy animal 1
+  | "bone", Pet.Dog _ -> Printf.printf "%s loved the toy! \n" name;
+      increase_happiness animal 2; decrease_energy animal 1
+  | "bone", _ -> Printf.printf "%s did not like the toy. \n" name;
       decrease_happiness animal 2
-  | "Trash", _ ->
-      Printf.printf "%s did not like the toy. \n" name;
+  | "trash", _ -> Printf.printf "%s did not like the toy. \n" name;
       decrease_happiness animal 2
   | _, _ ->
-      print_endline "Not one of the options \n";
-      play animal
+      print_endline "Not one of the options \n"; play animal
 
 (* WALK --------------------------------------------*)
 let ran_away animal leash =
@@ -169,50 +150,43 @@ let ran_away animal leash =
 let rec walk animal =
   let name = Pet.get_name animal in
   Printf.printf "Would you like to bring a leash? Y/N \n";
-  let response = read_line () in
+  let response = String.lowercase_ascii (read_line ()) in
+  let leash = Pet.get_leash animal in
+if response = "y" then 
+    if leash = false 
+      then Printf.printf "%s does not have a leash. Type 'exit' to quit.\n" name;
   Printf.printf
     "Where would you like to walk %s? Options: Park, Street, Desert, Swim\n"
     name;
-  let location = read_line () in
+  let location = String.lowercase_ascii (read_line ()) in
   match (location, animal) with
-  | "Park", Pet.Dog _ ->
-      if response = "Y" then ran_away animal true else ran_away animal false;
+  | "park", Pet.Dog _ ->
+      if response = "y" && leash then ran_away animal true else ran_away animal false;
       Printf.printf "%s enjoyed a lovely walk in the park.\n" name;
-      increase_happiness animal 2;
-      decrease_energy animal 1;
-      increase_health animal 1
-  | "Park", Pet.Camel _ ->
-      if response = "Y" then ran_away animal true else ran_away animal false;
+      increase_happiness animal 2; decrease_energy animal 1; increase_health animal 1
+  | "park", Pet.Camel _ ->
+      if response = "y" && leash then ran_away animal true else ran_away animal false;
       Printf.printf "You got strange looks for bringing a %s to a park. \n" name;
       decrease_energy animal 2
-  | "Street", _ ->
-      if response = "Y" then ran_away animal true else ran_away animal false;
+  | "street", _ ->
+      if response = "y" && leash then ran_away animal true else ran_away animal false;
       Printf.printf "%s had a nice time walking on the street.\n" name;
-      increase_happiness animal 1;
-      decrease_energy animal 1;
-      increase_health animal 1
-  | "Desert", Pet.Dog _ ->
-      if response = "Y" then ran_away animal true else ran_away animal false;
+      increase_happiness animal 1; decrease_energy animal 1; increase_health animal 1
+  | "desert", Pet.Dog _ ->
+      if response = "y" && leash then ran_away animal true else ran_away animal false;
       Printf.printf "%s found the desert walk challenging and feels tired.\n"
         name;
-      decrease_energy animal 2;
-      decrease_health animal 2
-  | "Desert", Pet.Camel _ ->
-      if response = "Y" then ran_away animal true else ran_away animal false;
+      decrease_energy animal 2; decrease_health animal 2
+  | "desert", Pet.Camel _ ->
+      if response = "y" && leash then ran_away animal true else ran_away animal false;
       Printf.printf "%s found the desert walk refreshing and feels energized.\n"
         name;
-      increase_energy animal 2;
-      decrease_health animal 2
-  | "Swim", Pet.Dog _ ->
-      Printf.printf "%s had a great time swimming!\n" name;
-      increase_happiness animal 3;
-      decrease_energy animal 2;
-      increase_health animal 1
-  | "Swim", Pet.Camel _ ->
-      Printf.printf "%s does not know how to swim...\n" name;
-      increase_happiness animal 3;
-      decrease_energy animal 2;
-      decrease_health animal 3
+      increase_energy animal 2; decrease_health animal 2
+  | "swim", Pet.Dog _ -> Printf.printf "%s had a great time swimming!\n" name;
+      increase_happiness animal 3; decrease_energy animal 2; increase_health animal 1
+  | "swim", Pet.Camel _ -> Printf.printf "%s does not know how to swim...\n" name;
+      increase_happiness animal 3; decrease_energy animal 2; decrease_health animal 3
+  | "exit", _ -> ()
   | _, _ ->
       Printf.printf "That's not a valid walking option. Please choose again.\n";
       walk animal
@@ -223,30 +197,21 @@ let rec clean animal =
   Printf.printf
     "How would you like to clean %s? Options: Bath, Dry Shampoo, Brush, Mud\n"
     name;
-  let methods = read_line () in
+  let methods = String.lowercase_ascii (read_line ()) in
   match (methods, animal) with
-  | "Bath", Pet.Dog _ ->
-      Printf.printf "%s enjoyed the bath and feels refreshed!\n" name;
-      increase_happiness animal 2;
-      increase_health animal 1
-  | "Bath", Pet.Camel _ ->
-      Printf.printf "Bathing %s was challenging but necessary.\n" name;
-      decrease_happiness animal 1;
-      increase_health animal 1
-  | "Dry Shampoo", Pet.Dog _ ->
-      Printf.printf "%s feels cleaner with dry shampoo.\n" name;
+  | "bath", Pet.Dog _ -> Printf.printf "%s enjoyed the bath and feels refreshed!\n" name;
+      increase_happiness animal 2; increase_health animal 1
+  | "bath", Pet.Camel _ -> Printf.printf "Bathing %s was challenging but necessary.\n" name;
+      decrease_happiness animal 1; increase_health animal 1
+  | "dry Shampoo", Pet.Dog _ -> Printf.printf "%s feels cleaner with dry shampoo.\n" name;
       increase_happiness animal 1
-  | "Dry Shampoo", Pet.Camel _ ->
-      Printf.printf "%s appreciates the quick clean!\n" name;
+  | "dry Shampoo", Pet.Camel _ -> Printf.printf "%s appreciates the quick clean!\n" name;
       increase_happiness animal 2
-  | "Brush", _ ->
-      Printf.printf "%s loves being brushed and looks great!\n" name;
+  | "brush", _ -> Printf.printf "%s loves being brushed and looks great!\n" name;
       increase_happiness animal 1
-  | "Mud", _ ->
-      Printf.printf "%s is dirty and got fleas! \n" name;
-      decrease_health animal 2
-  | _, _ ->
-      Printf.printf "That's not a valid cleaning option. Please choose again.\n";
+  | "mud", _ -> Printf.printf "%s is dirty and got fleas! \n" name;
+      Pet.add_sickness animal "Fleas"; decrease_health animal 2
+  | _, _ -> Printf.printf "That's not a valid cleaning option. Please choose again.\n";
       clean animal
 
 (* NAP --------------------------------------------*)
@@ -254,35 +219,19 @@ let rec nap animal =
   let name = Pet.get_name animal in
   Printf.printf
     "Where would you like %s to nap? Options: Bed, Sand, Box, Concrete \n" name;
-  let methods = read_line () in
+  let methods = String.lowercase_ascii (read_line ()) in
   match (methods, animal) with
-  | "Bed", _ ->
-      Printf.printf "%s was very comfortable and slept well!\n" name;
-      increase_happiness animal 1;
-      increase_energy animal 2;
-      increase_health animal 1
-  | "Sand", Pet.Camel _ ->
-      Printf.printf "%s was very comfortable and slept well!\n" name;
-      increase_happiness animal 1;
-      increase_energy animal 2;
-      increase_health animal 1
-  | "Sand", _ ->
-      Printf.printf "%s slept fine.\n" name;
-      increase_energy animal 1
-  | "Box", Pet.Camel _ ->
-      Printf.printf "%s could not fit!" name;
-      decrease_happiness animal 2;
-      decrease_energy animal 2;
-      decrease_health animal 1
-  | "Box", _ ->
-      Printf.printf "%s slept fine.\n" name;
-      increase_energy animal 1
-  | "Concrete", _ ->
-      Printf.printf "%s was very uncomfortable and could not sleep!\n" name;
-      decrease_happiness animal 2;
-      decrease_energy animal 2
-  | _, _ ->
-      Printf.printf "That's not a valid nap option. Please choose again.\n";
+  | "bed", _ -> Printf.printf "%s was very comfortable and slept well!\n" name;
+      increase_happiness animal 1; increase_energy animal 2; increase_health animal 1
+  | "sand", Pet.Camel _ -> Printf.printf "%s was very comfortable and slept well!\n" name;
+      increase_happiness animal 1; increase_energy animal 2; increase_health animal 1
+  | "sand", _ -> Printf.printf "%s slept fine.\n" name; increase_energy animal 1
+  | "box", Pet.Camel _ -> Printf.printf "%s could not fit!" name;
+      decrease_happiness animal 2; decrease_energy animal 2; decrease_health animal 1
+  | "box", _ -> Printf.printf "%s slept fine.\n" name; increase_energy animal 1
+  | "concrete", _ -> Printf.printf "%s was very uncomfortable and could not sleep!\n" name;
+      decrease_happiness animal 2; decrease_energy animal 2
+  | _, _ -> Printf.printf "That's not a valid nap option. Please choose again.\n";
       nap animal
 
 (* TRAINING --------------------------------------------*)
@@ -308,27 +257,26 @@ let rec navigate_training options animal skills =
   in
   ask_questions options 0
 
-and finalize_training animal points_accumulated skills =
+and finalize_training animal points_accumulated skills skill_type =
   let pet = Pet.to_pet animal in
-  if points_accumulated >= 8 then
-    let available_skills =
-      List.filter (fun skill -> not (List.mem skill pet.skills)) skills
-    in
+  if points_accumulated >= 8 then let available_skills =
+      List.filter (fun skill -> not (List.mem skill pet.skills)) skills in
     if available_skills <> [] then (
       let skill_earned =
-        List.nth available_skills (Random.int (List.length available_skills))
-      in
+        List.nth available_skills (Random.int (List.length available_skills)) in
       pet.skills <- skill_earned :: pet.skills;
       Printf.printf "Congratulations! Your pet has learned a new skill: %s!\n"
         skill_earned;
-      Pet.increase_health animal 1;
-      Pet.increase_happiness animal 1)
+      match skill_type with 
+        | 1 -> Pet.increase_max_energy animal; Pet.increase_energy animal 1
+        | 2 -> Pet.increase_max_health animal; Pet.increase_health animal 1
+        | 3 -> Pet.increase_max_happiness animal; Pet.increase_happiness animal 1
+        | _ -> ();
+      )
     else Printf.printf "Your pet has already mastered all available skills.\n"
-  else if points_accumulated > 0 then
-    Printf.printf
+  else if points_accumulated > 0 then Printf.printf
       "Good effort, but more training is needed to master a new skill.\n"
-  else
-    Printf.printf
+  else Printf.printf
       "No significant progress this session. Try different strategies next time.\n"
 
 let speed_training animal =
@@ -350,7 +298,7 @@ let speed_training animal =
     ]
   in
   let skills = [ "Agility"; "Stamina"; "Quick Reflexes"; "Endurance" ] in
-  navigate_training speed_options animal skills
+  navigate_training speed_options animal skills 1
 
 let strength_training animal =
   let strength_options =
@@ -370,7 +318,7 @@ let strength_training animal =
     ]
   in
   let skills = [ "Muscle Gain"; "Strength"; "Toughness"; "Power" ] in
-  navigate_training strength_options animal skills
+  navigate_training strength_options animal skills 2
 
 let intelligence_training animal =
   let intelligence_options =
@@ -390,7 +338,7 @@ let intelligence_training animal =
   let skills =
     [ "Quick Thinking"; "Mental Agility"; "Focus"; "Strategic Planning" ]
   in
-  navigate_training intelligence_options animal skills
+  navigate_training intelligence_options animal skills 3
 
 let rec train animal =
   Printf.printf
@@ -409,23 +357,24 @@ let rec train animal =
 type shop_item = {
   name : string;
   effect : string;
-  change : int;
+  change : string;
   cost : float;
 }
 
 let shop_items =
   [
-    { name = "Vitamin Boost"; effect = "health"; change = 2; cost = 2.5 };
-    { name = "Energy Drink"; effect = "energy"; change = 3; cost = 3.0 };
-    { name = "Happiness Cookie"; effect = "happiness"; change = 2; cost = 1.5 };
-    { name = "Nutrition Snack"; effect = "nutrition"; change = 1; cost = 2.0 };
+    { name = "Vitamin Boost"; effect = "health"; change = "2"; cost = 2.5 };
+    { name = "Energy Drink"; effect = "energy"; change = "3"; cost = 3.0 };
+    { name = "Happiness Cookie"; effect = "happiness"; change = "2"; cost = 1.5 };
+    { name = "Nutrition Snack"; effect = "nutrition"; change = "1"; cost = 2.0 };
+    { name = "Leash"; effect = "items"; change = "1 leash"; cost = 1.0 };
   ]
 
 let display_shop_items () =
   Printf.printf "Available items for purchase:\n";
   List.iteri
     (fun i item ->
-      Printf.printf "%d: %s - %s +%d (Cost: $%.2f)\n" (i + 1) item.name
+      Printf.printf "%d: %s - %s +%s (Cost: $%.2f)\n" (i + 1) item.name
         item.effect item.change item.cost)
     shop_items;
   Printf.printf "Enter the number to buy an item or 'exit' to leave: "
@@ -439,6 +388,12 @@ let rec shop animal =
 
 and process_input input animal =
   match int_of_string_opt input with
+  | Some index when index = 5 ->
+    if Pet.get_leash animal 
+      then (Printf.printf "%s already has a leash.\n" (Pet.get_name animal);
+      shop animal)
+    else let item = List.nth shop_items (index - 1) in
+    confirm_purchase item animal
   | Some index when index > 0 && index <= List.length shop_items ->
       let item = List.nth shop_items (index - 1) in
       confirm_purchase item animal
@@ -457,25 +412,26 @@ and confirm_purchase item animal =
       confirm_purchase item animal
 
 and process_transaction item animal =
-  let pet = Pet.to_pet animal in
-  if pet.money >= item.cost then begin
-    pet.money <- pet.money -. item.cost;
+  let money = Pet.get_money animal in
+  if money >= item.cost then begin
+    Pet.decrease_money animal item.cost;
     apply_effects item animal;
     Printf.printf "You have purchased %s. Remaining Balance: $%.2f\n" item.name
-      pet.money;
+      money;
     shop animal
   end
   else begin
-    Printf.printf "Not enough money. Your balance: $%.2f\n" pet.money;
+    Printf.printf "Not enough money. Your balance: $%.2f\n" money;
     shop animal
   end
 
 and apply_effects item animal =
   match item.effect with
-  | "health" -> Pet.increase_health animal item.change
-  | "happiness" -> Pet.increase_happiness animal item.change
-  | "energy" -> Pet.increase_energy animal item.change
-  | "nutrition" -> Pet.increase_nutrition animal item.change
+  | "health" -> Pet.increase_health animal (int_of_string item.change)
+  | "happiness" -> Pet.increase_happiness animal (int_of_string item.change)
+  | "energy" -> Pet.increase_energy animal (int_of_string item.change)
+  | "nutrition" -> Pet.increase_nutrition animal (int_of_string item.change)
+  | "items" -> Pet.set_leash animal
   | _ -> ()
 
 (* RIDE --------------------------------------------*)
@@ -530,24 +486,23 @@ let rec battle animal =
         end
         else begin
           Printf.printf
-            "Wrong choice! No points. Try again or type 'exit' to leave the \
-             battle.\n";
-          if String.lowercase_ascii (read_line ()) = "exit" then ()
+            "Wrong choice! No points. Type 'Y' to continue or 'N' to exit.\n";
+          if String.lowercase_ascii (read_line ()) = "n" then ()
           else navigate_stages current_stages animal points_accumulated
         end
   in
   navigate_stages stages animal 0
 
 and reward animal points_accumulated =
-  let pet = Pet.to_pet animal in
   let base_prize = 2.0 in
   let multiplier = float_of_int points_accumulated *. 0.1 in
-  let total_prize = base_prize +. multiplier in
+  let total_prize = base_prize +. multiplier -. 5. in
   Printf.printf
     "Congratulations! You have won $%.2f based on your performance!\n"
     total_prize;
-  pet.money <- pet.money +. total_prize;
-  Printf.printf "Your new balance is $%.2f\n" pet.money
+  Pet.increase_money animal total_prize;
+  let money = Pet.get_money animal in
+  Printf.printf "Your new balance is $%.2f\n" money
 
 (* MINIGAME --------------------------------------------*)
 
@@ -573,8 +528,7 @@ let instructions earning =
 let earn animal dollar_signs earning =
   if dollar_signs > 4 then begin
     Printf.printf "Congratulations! You earned $%s!\n" (string_of_int earning);
-    let pet = Pet.to_pet animal in
-    pet.money <- pet.money +. float_of_int earning
+    Pet.increase_money animal (float_of_int earning)
   end
   else
     Printf.printf
@@ -606,7 +560,7 @@ let minigame animal =
   continue_simulation := true;
   signal_handled := false;
   setup_signal_handler ();
-  let earning = 3 in
+  let earning = 5 in
   instructions earning;
   let _ = read_line () in
   let arguments = [| 10; 20; 8 |] in
@@ -629,12 +583,17 @@ let rec vet animal =
   let name = Pet.get_name animal in
   Printf.printf
     "What would you like to treat %s for? Microchip ($3), Fleas ($2), Puking \
-     ($1), Fever ($2), Depression ($3)\n"
+     ($1), Fever ($2), Depression ($3), exit\n"
     name;
   let choice = read_line () in
-  match List.assoc_opt choice vet_costs with
-  | Some cost -> confirm_treatment name choice cost animal
-  | None ->
+  match choice with
+  | "exit" -> ()
+  | _ ->
+    match List.assoc_opt choice vet_costs with
+    | Some cost -> if Pet.get_sickness animal choice 
+      then confirm_treatment name choice cost animal 
+      else Printf.printf "%s does not have that sickness.\n" name; vet animal
+    | None ->
       Printf.printf "That's not a valid option. Please choose again.\n";
       vet animal
 
@@ -651,17 +610,17 @@ and confirm_treatment name treatment cost animal =
       confirm_treatment name treatment cost animal
 
 and process_treatment name treatment cost animal =
-  let pet = Pet.to_pet animal in
-  if pet.money >= cost then begin
-    pet.money <- pet.money -. cost;
+  let money = Pet.get_money animal in
+  if money >= cost then begin
+    Pet.decrease_money animal cost;
     apply_treatment name treatment animal;
     Printf.printf "%s has been treated for %s. Remaining balance: $%.2f\n" name
-      treatment pet.money
+      treatment money
   end
   else begin
     Printf.printf
       "Not enough money for the treatment of %s. Your balance: $%.2f\n" name
-      pet.money;
+      money;
     vet animal
   end
 
@@ -674,22 +633,20 @@ and apply_treatment name treatment animal =
       end
       else Printf.printf "%s already has a microchip.\n" name
   | "Fleas" ->
-      increase_health animal 3;
+      Pet.remove_sickness animal "Fleas"; increase_health animal 3;
       Printf.printf "The vet gave %s flea shampoo. %s is all better!\n" name
         name
   | "Puking" ->
-      increase_health animal 3;
-      increase_nutrition animal 2;
-      Printf.printf "The vet gave %s probiotics. %s feels better!\n" name name
+    Pet.remove_sickness animal "Puking"; increase_health animal 3; increase_nutrition animal 2;
+    Printf.printf "The vet gave %s probiotics. %s feels better!\n" name name
   | "Fever" ->
-      increase_health animal 3;
-      Printf.printf "The vet gave %s medicine. %s feels better!\n" name name
+    Pet.remove_sickness animal "Fever"; increase_health animal 3;
+    Printf.printf "The vet gave %s medicine. %s feels better!\n" name name
   | "Depression" ->
-      increase_health animal 3;
-      increase_happiness animal 3;
-      increase_energy animal 2;
-      Printf.printf "The vet gave %s antidepressants. %s feel better!\n" name
-        name
+    Pet.remove_sickness animal "Depression"; increase_health animal 3;
+    increase_happiness animal 3; increase_energy animal 2;
+    Printf.printf "The vet gave %s antidepressants. %s feel better!\n" name
+      name
   | _ -> () (* This case should never happen as it's handled earlier *)
 
 (* COOKING GAME --------------------------------------------*)
@@ -758,7 +715,7 @@ let rec cooking_challenge animal =
   Printf.printf "\nWelcome to the Pet Cooking Challenge!\n\n";
   Printf.printf
     "You have been tasked with preparing a delicious meal for your pet. Follow \
-     the instructions carefully to earn coins!\n\n";
+     the instructions carefully to earn money!\n\n";
   let selected_ingredient = choose_ingredient () in
   let cooking_method = choose_cooking_method selected_ingredient in
   let side = choose_side_dish selected_ingredient in
@@ -766,20 +723,19 @@ let rec cooking_challenge animal =
   Printf.printf "\nGreat choices! Your meal: %s %s with %s and %s is ready.\n"
     cooking_method selected_ingredient.name side vegetable;
   let quality = Random.int 3 + 1 in
-  let coins = quality * 10 in
+  let money = quality in
   Printf.printf "Judges' Rating: ";
   (match quality with
   | 1 -> Printf.printf "Good"
   | 2 -> Printf.printf "Very Good"
   | _ -> Printf.printf "Excellent");
-  Printf.printf "\nCoins Earned: %d\n\n" coins;
+  Printf.printf "\nMoney Earned: $%d\n\n" money;
 
-  let pet = Pet.to_pet animal in
-  pet.money <- pet.money +. float_of_int coins;
+  Pet.increase_money animal (float_of_int money);
   Printf.printf
-    "Congratulations! You earned %d coins for your pet's meal. New balance: \
+    "Congratulations! You earned $%d for your pet's meal. New balance: \
      $%.2f\n"
-    coins pet.money;
+    money (Pet.get_money animal);
 
   Printf.printf "Do you want to cook another meal? (yes/no)\n> ";
   match read_line () with
@@ -787,10 +743,16 @@ let rec cooking_challenge animal =
   | _ -> Printf.printf "Thanks for playing the Pet Cooking Challenge!\n"
 
 (* BLACKJACK --------------------------------------------*)
+<<<<<<< HEAD
+=======
+
+(* BLACKJACK GAME --------------------------------------------*)
+(* NOTE a 10 has a higher probability than the rest of the numbers *)
+>>>>>>> 7ab75ee931f7fb39dab675b67cebdcd6484a72fb
 let play_blackjack animal bet =
-  let pet = Pet.to_pet animal in
-  if bet > pet.money then
-    Printf.printf "You do not have enough coins. Try again.\n"
+  let money = Pet.get_money animal in
+  if bet > money then
+    Printf.printf "You do not have enough money. Try again.\n"
   else begin
     let simulate_dealer player_hand =
       let dealer_hand = ref 0 in
@@ -800,16 +762,21 @@ let play_blackjack animal bet =
       Printf.printf "Dealer's hand is %d.\n" !dealer_hand;
       if !dealer_hand > 21 || !dealer_hand < player_hand then (
         Printf.printf
-          "You win! Dealer busted or has less than your hand. You gain %d coins.\n"
+          "You win! Dealer busted or has less than your hand. You gain $%d.\n"
           (int_of_float bet);
-        pet.money <- pet.money +. bet)
+        Pet.increase_money animal bet)
       else if !dealer_hand > player_hand then (
         Printf.printf
-          "Dealer wins with %d against your %d. You lose %d coins.\n"
+          "Dealer wins with %d against your %d. You lose $%d.\n"
           !dealer_hand player_hand (int_of_float bet);
+<<<<<<< HEAD
         pet.money <- max 0.0 (pet.money -. bet)
         (* Ensure money doesn't go negative *))
       else Printf.printf "It's a draw. No coins are lost or gained.\n"
+=======
+        Pet.decrease_money animal bet)
+      else Printf.printf "It's a draw. No money is lost or gained.\n"
+>>>>>>> 7ab75ee931f7fb39dab675b67cebdcd6484a72fb
     in
 
     let rec blackjack_turn hand =
@@ -820,13 +787,17 @@ let play_blackjack animal bet =
           Printf.printf "You drew a %d.\n" new_card;
           let new_hand = hand + new_card in
           if new_hand > 21 then (
-            Printf.printf "Busted! You lose your bet of %d coins.\n"
+            Printf.printf "Busted! You lose your bet of $%d.\n"
               (int_of_float bet);
+<<<<<<< HEAD
             pet.money <- max 0.0 (pet.money -. bet))
+=======
+            Pet.decrease_money animal bet)
+>>>>>>> 7ab75ee931f7fb39dab675b67cebdcd6484a72fb
           else if new_hand = 21 then (
-            Printf.printf "You hit 21! You win and gain %d coins.\n"
+            Printf.printf "You hit 21! You win and gain $%d.\n"
               (int_of_float bet);
-            pet.money <- pet.money +. bet)
+            Pet.increase_money animal bet)
           else blackjack_turn new_hand
       | "s" -> simulate_dealer hand
       | _ ->
@@ -835,175 +806,30 @@ let play_blackjack animal bet =
           blackjack_turn hand
     in
 
+<<<<<<< HEAD
+=======
+    Pet.decrease_money animal bet;
+>>>>>>> 7ab75ee931f7fb39dab675b67cebdcd6484a72fb
     blackjack_turn 0
   end
 
 (* TRIVIA --------------------------------------------*)
-
-type trivia = {
-  question : string;
-  answer : string;
-}
-
-let trivia_questions =
-  [
-    {
-      question = "What is the largest planet in our solar system?";
-      answer = "Jupiter";
-    };
-    { question = "What year did the Titanic sink?"; answer = "1912" };
-    {
-      question = "What is the normal body temperature for a dog? (in Celsius)";
-      answer = "38";
-    };
-    { question = "How many legs does a spider have?"; answer = "8" };
-    { question = "Who wrote 'To Kill a Mockingbird'?"; answer = "Harper Lee" };
-    { question = "What is the capital of France?"; answer = "Paris" };
-    { question = "What chemical element has the symbol O?"; answer = "Oxygen" };
-    {
-      question = "In what year did the First World War begin?";
-      answer = "1914";
-    };
-    { question = "What is the largest ocean on Earth?"; answer = "Pacific" };
-    {
-      question = "What is the hardest natural substance on Earth?";
-      answer = "Diamond";
-    };
-    { question = "What planet is known as the Red Planet?"; answer = "Mars" };
-    { question = "Who painted the Mona Lisa?"; answer = "Leonardo da Vinci" };
-    { question = "What is the smallest breed of dog?"; answer = "Chihuahua" };
-    {
-      question = "What is the main ingredient in guacamole?";
-      answer = "Avocado";
-    };
-    { question = "How many hearts does an octopus have?"; answer = "Three" };
-    { question = "What is the longest river in the world?"; answer = "Nile" };
-    { question = "What is the fastest land animal?"; answer = "Cheetah" };
-    { question = "What year was the first iPhone released?"; answer = "2007" };
-    { question = "Who wrote 'Pride and Prejudice'?"; answer = "Jane Austen" };
-    {
-      question = "What is the tallest breed of dog in the world?";
-      answer = "Great Dane";
-    };
-    { question = "What color is a giraffe's tongue?"; answer = "Blue" };
-    {
-      question = "What gas do plants absorb from the atmosphere?";
-      answer = "Carbon dioxide";
-    };
-    {
-      question = "What is the smallest planet in our solar system?";
-      answer = "Mercury";
-    };
-    { question = "What year did World War II end?"; answer = "1945" };
-    { question = "Who discovered penicillin?"; answer = "Alexander Fleming" };
-    { question = "What is the capital of Canada?"; answer = "Ottawa" };
-    { question = "Who wrote '1984'?"; answer = "George Orwell" };
-    { question = "What is the chemical symbol for gold?"; answer = "Au" };
-    { question = "What year did the Berlin Wall fall?"; answer = "1989" };
-    { question = "How many valves does the heart have?"; answer = "4" };
-    {
-      question = "What is the largest bird of prey in the world?";
-      answer = "Andean condor";
-    };
-    { question = "What organ can regenerate tissue?"; answer = "Liver" };
-    {
-      question =
-        "What is the main ingredient in traditional Japanese miso soup?";
-      answer = "Soy";
-    };
-    { question = "What element is diamond made of?"; answer = "Carbon" };
-    {
-      question = "What year did Albert Einstein win the Nobel Prize in Physics?";
-      answer = "1921";
-    };
-    {
-      question = "What is the longest-running Broadway show of all time?";
-      answer = "The Phantom of the Opera";
-    };
-    {
-      question = "Who invented the telephone?";
-      answer = "Alexander Graham Bell";
-    };
-    {
-      question = "What is the gestation period of an African elephant?";
-      answer = "22 months";
-    };
-    { question = "Which planet is closest to the sun?"; answer = "Mercury" };
-    {
-      question = "What is the smallest bone in the human body?";
-      answer = "Stapes";
-    };
-    {
-      question = "Who painted 'The Starry Night'?";
-      answer = "Vincent van Gogh";
-    };
-    {
-      question = "What is the most abundant gas in the Earth's atmosphere?";
-      answer = "Nitrogen";
-    };
-    {
-      question = "Who is known as the father of modern physics?";
-      answer = "Galileo Galilei";
-    };
-    { question = "What year did the American Civil War end?"; answer = "1865" };
-    {
-      question = "What is the hardest known natural material on Earth?";
-      answer = "Diamond";
-    };
-    { question = "Who wrote 'Les Misérables'?"; answer = "Victor Hugo" };
-    { question = "What is the capital of Iceland?"; answer = "Reykjavik" };
-    {
-      question =
-        "What vitamin is produced when a person is exposed to sunlight?";
-      answer = "Vitamin D";
-    };
-    { question = "What is the study of mushrooms called?"; answer = "Mycology" };
-    {
-      question = "Which animal has the highest blood pressure?";
-      answer = "Giraffe";
-    };
-    {
-      question = "What is the name of the largest ocean on Earth?";
-      answer = "Pacific Ocean";
-    };
-    {
-      question = "Who discovered gravity when he saw a falling apple?";
-      answer = "Isaac Newton";
-    };
-    {
-      question = "What is the most spoken language in the world?";
-      answer = "Mandarin";
-    };
-    {
-      question =
-        "What animal is known to have the most powerful bite in the world?";
-      answer = "Saltwater crocodile";
-    };
-    {
-      question = "What is the longest river in the world?";
-      answer = "Amazon River";
-    };
-  ]
-
 let rec quiz_show animal questions =
   match questions with
   | [] -> Printf.printf "End of the quiz! Thanks for playing.\n"
-  | { question; answer } :: rest ->
+  | tr :: rest ->
+    let question = Trivia.get_question tr in
+    let answer = Trivia.get_answer tr in
       Printf.printf "%s\nType your answer or 'exit' to quit:\n> " question;
       let user_response = read_line () in
       if String.lowercase_ascii user_response = "exit" then
         Printf.printf "Exiting quiz show. Thank you for playing!\n"
-      else if
-        String.lowercase_ascii user_response = String.lowercase_ascii answer
+      else if Trivia.correct tr user_response animal
       then (
         Printf.printf "Correct!\n";
-        let pet = Pet.to_pet animal in
-        pet.money <- pet.money +. 1.0;
         quiz_show animal rest)
       else (
         Printf.printf "Incorrect. The correct answer was '%s'.\n" answer;
-        let pet = Pet.to_pet animal in
-        if pet.money > 0.0 then pet.money <- pet.money -. 1.0;
         quiz_show animal rest)
 
 (* HELP --------------------------------------------*)
@@ -1015,119 +841,80 @@ let display_help () =
     \  Play: Choose a toy for your pet to play with\n\
     \  Clean: Pick a way to clean your pet\n\
     \  Nap: Select a place for your pet to take a nap\n\
+    \  Ride: Take a ride on your pet\n\
+    \  Vet: Take your pet to the vet to possibly increase statuses with \
+    treatments\n\
     \  Train: Attempt to train your pet in a way of your choosing\n\
     \  Battle: Battle another pet for the chance to earn money\n\
+    \  Chance Game: Play a chance minigame where you try to collect dollar signs \
+    to earn money\n\
+    \  Blackjack Game: Play a game of blackjack to earn money\n\
+    \  Cooking Game: Play a cooking game to earn money\n\
+    \  Trivia Game: Play trivia to earn money\n\
     \  Shop: Buy items that can boost your statuses\n\
     \  Status: View your pet's health, happiness, energy and nutrition levels \
      and your monetary balance\n\
-    \  Ride: Take a ride on your pet\n\
-    \  Cooking: Play a cooking game to earn money\n\
-    \  Blackjack: Play a game of blackjack to earn money\n\
-    \  Trivia: Play trivia to earn money\n\
-    \  Groom: \n\
-    \  Event: \n\
-    \  Minigame: Play a chance minigame where you try to collect dollar signs \
-     to earn money\n\
-    \  Job: \n\
-    \  Explore: \n\
-    \  Vet: Take your pet to the vet to possibly increase statuses with \
-     treatments\n\
-    \  Socializing: \n\
     \  Help: Look at this menu you're seeing now!\n"
 
 (* MENU --------------------------------------------*)
-let rec options animal =
+(* decreases nutrition (hunger) by 1 after 3 actions *)
+let nutrition_loss animal count = if count mod 3 = 0 then decrease_nutrition animal 1
+
+let blackjack animal = let () = Printf.printf "Enter your bet ($): " in
+let bet = float_of_string (read_line ()) in
+play_blackjack animal bet
+
+let trivia animal = print_endline
+"For every question you answer correctly, you earn $1, and for \
+ every question you answer incorrectly, you lose $1";
+quiz_show animal (List.shuffle Trivia.trivia_questions)
+
+let rec options animal count =
   display_options Pet.options;
   let choice = read_line () in
   match choice with
   | choice when List.mem choice Pet.options -> begin
       match choice with
-      | "Feed" ->
-          feed animal;
-          status animal;
-          options animal
-      | "Walk" ->
-          walk animal;
-          status animal;
-          options animal
-      | "Play" ->
-          play animal;
-          status animal;
-          options animal
-      | "Clean" ->
-          clean animal;
-          status animal;
-          options animal
-      | "Nap" ->
-          nap animal;
-          status animal;
-          options animal
-      | "Train" ->
-          train animal;
-          status animal;
-          options animal
-      | "Battle" ->
-          battle animal;
-          status animal;
-          options animal
-      | "Shop" ->
-          shop animal;
-          status animal;
-          options animal
-      | "Status" ->
-          status animal;
-          options animal
-      | "Ride" ->
-          ride animal;
-          status animal;
-          options animal
-      | "Groom" -> options animal
-      | "Event" -> options animal
-      | "Minigame" ->
-          minigame animal;
-          status animal;
-          options animal
-      | "Job" -> options animal
-      | "Explore" -> options animal
-      | "Vet" ->
-          vet animal;
-          status animal;
-          options animal
-      | "Socializing" -> options animal
-      | "Cooking" ->
-          cooking_challenge animal;
-          status animal;
-          options animal
-      | "Blackjack" ->
-          let () = Printf.printf "Enter your bet: " in
-          let bet = float_of_string (read_line ()) in
-          play_blackjack animal bet;
-          status animal;
-          options animal
-      | "Help" ->
-          display_help ();
-          options animal
-      | "Trivia" ->
-          print_endline
-            "For every question you answer correctly, you earn $1, and for \
-             every question you answer incorrectly, you lose $1";
-          quiz_show animal trivia_questions;
-          status animal;
-          options animal
+      | "Feed" -> feed animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Walk" -> walk animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Play" -> play animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Clean" -> clean animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Nap" -> nap animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Train" -> train animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Battle" -> battle animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Shop" -> shop animal; status animal; options animal (count + 1)
+      | "Status" -> status animal; options animal (count + 1)
+      | "Ride" -> ride animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Chance Game" -> minigame animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Vet" -> vet animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Cooking Game" ->  cooking_challenge animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Blackjack Game" -> blackjack animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
+      | "Help" -> display_help (); options animal (count + 1)
+      | "Trivia Game" -> trivia animal; nutrition_loss animal count;
+          status animal; options animal (count + 1)
       | "END GAME" ->
-          print_endline "Thank you for playing Pet Simulator. Goodbye!";
-          exit 0
+          print_endline "Thank you for playing Pet Simulator. Goodbye!"; exit 0
       | _ -> ()
     end
-  | _ ->
-      print_endline "Invalid option, please try again.";
-      options animal
+  | _ -> print_endline "Invalid option, please try again."; options animal (count + 1)
 
 let rec game_select_animal () =
   let () = print_endline "Which animal would you like to select?\nDog  Camel" in
-  match read_line () with
-  | "Dog" -> create_dog ()
-  | "Camel" -> create_camel ()
+  match String.lowercase_ascii (read_line ()) with
+  | "dog" -> create_dog ()
+  | "camel" -> create_camel ()
   | _ ->
       print_endline "Please choose one of the options";
       game_select_animal ()
@@ -1136,6 +923,6 @@ let game_output () =
   game_start ();
   let animal = game_select_animal () in
   print_endline (Pet.status_to_string animal);
-  options animal
+  options animal 1
 
 let () = game_output ()
