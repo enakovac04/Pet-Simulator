@@ -591,14 +591,12 @@ let rec vet animal =
   let choice = read_line () in
   match choice with
   | "exit" -> ()
-  | _ ->
+  | _ -> (
     match List.assoc_opt choice vet_costs with
-    | Some cost -> if Pet.get_sickness animal choice 
-      then confirm_treatment name choice cost animal 
-      else Printf.printf "%s does not have that sickness.\n" name; vet animal
+    | Some cost -> confirm_treatment name choice cost animal 
     | None ->
       Printf.printf "That's not a valid option. Please choose again.\n";
-      vet animal
+      vet animal)
 
 and confirm_treatment name treatment cost animal =
   Printf.printf "Confirm treatment of %s for %s at $%.2f? (yes/no): " name
@@ -615,10 +613,7 @@ and confirm_treatment name treatment cost animal =
 and process_treatment name treatment cost animal =
   let money = Pet.get_money animal in
   if money >= cost then begin
-    Pet.decrease_money animal cost;
-    apply_treatment name treatment animal;
-    Printf.printf "%s has been treated for %s. Remaining balance: $%.2f\n" name
-      treatment money
+    apply_treatment name treatment animal money cost;
   end
   else begin
     Printf.printf
@@ -627,29 +622,50 @@ and process_treatment name treatment cost animal =
     vet animal
   end
 
-and apply_treatment name treatment animal =
+and apply_treatment name treatment animal money cost =
   match treatment with
-  | "Microchip" ->
-      if not (Pet.get_microchip animal) then begin
+  | "Microchip" -> if not (Pet.get_microchip animal) then begin
         Pet.set_microchip animal;
-        Printf.printf "%s has successfully received a microchip.\n" name
+        Printf.printf "%s has successfully received a microchip.\n" name;
+        Pet.decrease_money animal cost;
+        Printf.printf "%s has been treated for %s. Remaining balance: $%.2f\n" name
+        treatment money
       end
       else Printf.printf "%s already has a microchip.\n" name
-  | "Fleas" ->
-      Pet.remove_sickness animal "Fleas"; increase_health animal 3;
-      Printf.printf "The vet gave %s flea shampoo. %s is all better!\n" name
-        name
-  | "Puking" ->
-    Pet.remove_sickness animal "Puking"; increase_health animal 3; increase_nutrition animal 2;
-    Printf.printf "The vet gave %s probiotics. %s feels better!\n" name name
-  | "Fever" ->
-    Pet.remove_sickness animal "Fever"; increase_health animal 3;
-    Printf.printf "The vet gave %s medicine. %s feels better!\n" name name
-  | "Depression" ->
-    Pet.remove_sickness animal "Depression"; increase_health animal 3;
-    increase_happiness animal 3; increase_energy animal 2;
-    Printf.printf "The vet gave %s antidepressants. %s feel better!\n" name
-      name
+  | "Fleas" -> if Pet.get_sickness animal "Fleas" then begin
+        Pet.remove_sickness animal "Fleas"; increase_health animal 3;
+        Printf.printf "The vet gave %s flea shampoo. %s is all better!\n" name
+        name; Pet.decrease_money animal cost;
+        Printf.printf "%s has been treated for %s. Remaining balance: $%.2f\n" name
+        treatment money
+      end
+      else Printf.printf "%s does not have fleas.\n" name
+  | "Puking" -> if Pet.get_sickness animal "Puking" then begin
+      Pet.remove_sickness animal "Puking"; increase_health animal 3; 
+      increase_nutrition animal 2;
+      Printf.printf "The vet gave %s probiotics. %s feels better!\n" name name;
+      Pet.decrease_money animal cost;
+      Printf.printf "%s has been treated for %s. Remaining balance: $%.2f\n" name
+      treatment money
+    end 
+    else Printf.printf "%s is not puking.\n" name
+  | "Fever" -> if Pet.get_sickness animal "Fever" then begin
+      Pet.remove_sickness animal "Fever"; increase_health animal 3;
+      Printf.printf "The vet gave %s medicine. %s feels better!\n" name name;
+      Pet.decrease_money animal cost;
+      Printf.printf "%s has been treated for %s. Remaining balance: $%.2f\n" name
+      treatment money
+    end
+    else Printf.printf "%s does not have a fever.\n" name
+  | "Depression" -> if Pet.get_sickness animal "Depression" then begin
+      Pet.remove_sickness animal "Depression"; increase_health animal 3;
+      increase_happiness animal 3; increase_energy animal 2;
+      Printf.printf "The vet gave %s antidepressants. %s feel better!\n" name
+      name; Pet.decrease_money animal cost;
+      Printf.printf "%s has been treated for %s. Remaining balance: $%.2f\n" name
+      treatment money
+    end 
+    else Printf.printf "%s does not have Depression.\n" name
   | _ -> () (* This case should never happen as it's handled earlier *)
 
 (* COOKING GAME --------------------------------------------*)
