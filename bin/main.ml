@@ -494,14 +494,14 @@ let rec battle animal =
   navigate_stages stages animal 0
 
 and reward animal points_accumulated =
-  let money = Pet.get_money animal in
   let base_prize = 2.0 in
   let multiplier = float_of_int points_accumulated *. 0.1 in
-  let total_prize = base_prize +. multiplier in
+  let total_prize = base_prize +. multiplier -. 5. in
   Printf.printf
     "Congratulations! You have won $%.2f based on your performance!\n"
     total_prize;
   Pet.increase_money animal total_prize;
+  let money = Pet.get_money animal in
   Printf.printf "Your new balance is $%.2f\n" money
 
 (* MINIGAME --------------------------------------------*)

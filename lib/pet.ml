@@ -137,11 +137,6 @@ let status_to_string (p : animal) : string =
   ^ string_of_int pet.nutrition
   ^ "/10 nutrition, and $" ^ string_of_float pet.money
 
-let microchip_to_string p =
-  let pet = to_pet p in
-  if List.mem "microchip" pet.items then to_string p ^ " " ^ pet.name ^ " has a microchip."
-  else to_string p ^ " " ^ pet.name ^ " does not have a microchip."
-
 (* DECREASE/INCREASE *)  
 let decrease_health animal amount =
   match animal with
@@ -185,8 +180,8 @@ let decrease_nutrition animal amount =
 
 let increase_money animal amount =
   match animal with
-  | Dog d -> d.money <- min (d.money +. amount) 10.
-  | Camel c -> c.money <- min (c.money +. amount) 10.
+  | Dog d -> d.money <- (d.money +. amount)
+  | Camel c -> c.money <- (c.money +. amount)
   
 let decrease_money animal amount =
   match animal with
