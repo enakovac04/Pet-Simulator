@@ -743,12 +743,6 @@ let rec cooking_challenge animal =
   | _ -> Printf.printf "Thanks for playing the Pet Cooking Challenge!\n"
 
 (* BLACKJACK --------------------------------------------*)
-<<<<<<< HEAD
-=======
-
-(* BLACKJACK GAME --------------------------------------------*)
-(* NOTE a 10 has a higher probability than the rest of the numbers *)
->>>>>>> 7ab75ee931f7fb39dab675b67cebdcd6484a72fb
 let play_blackjack animal bet =
   let money = Pet.get_money animal in
   if bet > money then
@@ -769,14 +763,8 @@ let play_blackjack animal bet =
         Printf.printf
           "Dealer wins with %d against your %d. You lose $%d.\n"
           !dealer_hand player_hand (int_of_float bet);
-<<<<<<< HEAD
-        pet.money <- max 0.0 (pet.money -. bet)
-        (* Ensure money doesn't go negative *))
-      else Printf.printf "It's a draw. No coins are lost or gained.\n"
-=======
         Pet.decrease_money animal bet)
       else Printf.printf "It's a draw. No money is lost or gained.\n"
->>>>>>> 7ab75ee931f7fb39dab675b67cebdcd6484a72fb
     in
 
     let rec blackjack_turn hand =
@@ -789,11 +777,7 @@ let play_blackjack animal bet =
           if new_hand > 21 then (
             Printf.printf "Busted! You lose your bet of $%d.\n"
               (int_of_float bet);
-<<<<<<< HEAD
-            pet.money <- max 0.0 (pet.money -. bet))
-=======
             Pet.decrease_money animal bet)
->>>>>>> 7ab75ee931f7fb39dab675b67cebdcd6484a72fb
           else if new_hand = 21 then (
             Printf.printf "You hit 21! You win and gain $%d.\n"
               (int_of_float bet);
@@ -806,10 +790,6 @@ let play_blackjack animal bet =
           blackjack_turn hand
     in
 
-<<<<<<< HEAD
-=======
-    Pet.decrease_money animal bet;
->>>>>>> 7ab75ee931f7fb39dab675b67cebdcd6484a72fb
     blackjack_turn 0
   end
 
