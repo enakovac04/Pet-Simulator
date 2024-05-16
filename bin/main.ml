@@ -1,3 +1,6 @@
+(* @author Bella Falkenberg (alf253), Megan Cowart (mec328), 
+   Claire McHugh (cdm234), and Ena Kovac (ehk75) *)
+
 open Cs_final
 open Batteries
 
