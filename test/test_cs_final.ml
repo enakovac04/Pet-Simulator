@@ -158,6 +158,16 @@ let tests =
           increase_health animal 1; get_health animal)
           );
 
+        ("Testing Pet.increase_max_health" >:: fun _ ->
+          assert_equal 11 (let animal = create "Darien" "Dog" in 
+          increase_max_health animal; max_health animal)
+          );
+
+        ("Testing Pet.increase_max_health2" >:: fun _ ->
+          assert_equal 11 (let animal = create "Darien" "Camel" in 
+          increase_max_health animal; max_health animal)
+          );
+
         ("Testing Pet.increase_happiness to maximum" >:: fun _ ->
           assert_equal 10 (let animal = create "Darien" "Dog" in 
           increase_happiness animal 5; get_happiness animal)
@@ -173,10 +183,20 @@ let tests =
           decrease_happiness animal 15; get_happiness animal)
           );
 
-          ("Testing Pet.decrease_happiness to zero2" >:: fun _ ->
-            assert_equal 0 (let animal = create "Darien" "Camel" in 
-            decrease_happiness animal 15; get_happiness animal)
-            );
+        ("Testing Pet.decrease_happiness to zero2" >:: fun _ ->
+          assert_equal 0 (let animal = create "Darien" "Camel" in 
+          decrease_happiness animal 15; get_happiness animal)
+          );
+
+        ("Testing Pet.increase_max_happiness" >:: fun _ ->
+          assert_equal 11 (let animal = create "Darien" "Dog" in 
+          increase_max_happiness animal; max_happiness animal)
+          );
+  
+        ("Testing Pet.increase_max_happiness2" >:: fun _ ->
+          assert_equal 11 (let animal = create "Darien" "Camel" in 
+          increase_max_happiness animal; max_happiness animal)
+          );
 
         ("Testing Pet.increase_energy to maximum" >:: fun _ ->
           assert_equal 10 (let animal = create "Darien" "Dog" in 
@@ -196,6 +216,56 @@ let tests =
         ("Testing Pet.decrease_energy to zero2" >:: fun _ ->
           assert_equal 0 (let animal = create "Darien" "Camel" in 
           decrease_energy animal 15; get_energy animal)
+          );
+
+        ("Testing Pet.increase_max_energy" >:: fun _ ->
+          assert_equal 11 (let animal = create "Darien" "Dog" in 
+          increase_max_energy animal; max_energy animal)
+          );
+  
+        ("Testing Pet.increase_max_energy2" >:: fun _ ->
+          assert_equal 11 (let animal = create "Darien" "Camel" in 
+          increase_max_energy animal; max_energy animal)
+          );
+
+        ("Testing Pet.increase_money" >:: fun _ -> assert_equal 
+          (let animal = create "Darien" "Dog" in 
+          increase_money animal 1.; get_money animal)
+            6.);
+          
+        ("Testing Pet.increase_money2" >:: fun _ -> assert_equal 
+          (let animal = create "Darien" "Camel" in 
+          increase_money animal 1.; get_money animal)
+            6.);
+  
+        ("Testing Pet.decrease_money" >:: fun _ ->
+            assert_equal 3. (let animal = create "Darien" "Dog" in 
+            decrease_money animal 2.; get_money animal)
+            );
+  
+        ("Testing Pet.decrease_money2" >:: fun _ ->
+            assert_equal 3. (let animal = create "Darien" "Camel" in 
+            decrease_money animal 2.; get_money animal)
+            );
+
+        ("Testing Pet.decrease_money to zero" >:: fun _ ->
+          assert_equal 0. (let animal = create "Darien" "Dog" in 
+          decrease_money animal 5.; get_money animal)
+          );
+  
+        ("Testing Pet.decrease_money to zero2" >:: fun _ ->
+          assert_equal 0. (let animal = create "Darien" "Camel" in 
+          decrease_money animal 5.; get_money animal)
+          );
+
+        ("Testing Pet.decrease_money under minimum" >:: fun _ ->
+          assert_equal 0. (let animal = create "Darien" "Dog" in 
+          decrease_money animal 5.; get_money animal)
+          );
+
+        ("Testing Pet.decrease_money under minimum" >:: fun _ ->
+          assert_equal 0. (let animal = create "Darien" "Dog" in 
+          decrease_money animal 5.; get_money animal)
           );
 
         ("Testing Pet.set_health" >:: fun _ ->
@@ -236,6 +306,64 @@ let tests =
         ("Testing Pet.set_nutrition2" >:: fun _ ->
           let animal = create "Darien" "Camel" in 
           set_nutrition animal 4; assert_equal 4 (get_nutrition animal)
+          );
+
+        ("Testing Pet.set_money" >:: fun _ ->
+          let animal = create "Darien" "Dog" in 
+          set_money animal 4.; assert_equal 4. (get_money animal)
+          );
+  
+        ("Testing Pet.set_money2" >:: fun _ ->
+          let animal = create "Darien" "Camel" in 
+          set_money animal 4.; assert_equal 4. (get_money animal)
+          );
+
+        ("Testing Pet.add_sickness" >:: fun _ ->
+          let animal = create "Darien" "Dog" in 
+          add_sickness animal "Puking"; assert_equal true 
+          (get_sickness animal "Puking")
+          );
+
+        ("Testing Pet.add_sickness2" >:: fun _ ->
+          let animal = create "Darien" "Camel" in 
+          add_sickness animal "Puking"; assert_equal true 
+          (get_sickness animal "Puking")
+          );
+
+        ("Testing Pet.add_sickness pet already has" >:: fun _ ->
+          let animal = create "Darien" "Dog" in 
+          add_sickness animal "Puking"; add_sickness animal "Puking"; 
+          assert_equal true (get_sickness animal "Puking")
+          );
+
+        ("Testing Pet.add_sickness pet already has2" >:: fun _ ->
+          let animal = create "Darien" "Camel" in 
+          add_sickness animal "Puking"; add_sickness animal "Puking"; 
+          assert_equal true (get_sickness animal "Puking")
+          );
+
+        ("Testing Pet.remove_sickness" >:: fun _ ->
+          let animal = create "Darien" "Dog" in 
+          add_sickness animal "Puking"; remove_sickness animal "Puking"; 
+          assert_equal false (get_sickness animal "Puking")
+          );
+
+        ("Testing Pet.remove_sickness2" >:: fun _ ->
+          let animal = create "Darien" "Camel" in 
+          add_sickness animal "Puking"; remove_sickness animal "Puking"; 
+          assert_equal false (get_sickness animal "Puking")
+          );
+
+        ("Testing Pet.remove_sickness pet does not have" >:: fun _ ->
+          let animal = create "Darien" "Dog" in 
+          remove_sickness animal "Puking"; 
+          assert_equal false (get_sickness animal "Puking")
+          );
+  
+        ("Testing Pet.remove_sickness2 pet does not have" >:: fun _ ->
+          let animal = create "Darien" "Camel" in 
+          remove_sickness animal "Puking"; 
+          assert_equal false (get_sickness animal "Puking")
           );
 
         ("Testing Pet.set_microchip" >:: fun _ ->
@@ -482,6 +610,43 @@ let tests =
           set_nutrition camel 10;
           assert_equal "Camel Spike has 10/10 health, 10/10 happiness, 10/10 energy, 10/10 nutrition, and $5." (status_to_string camel)
         );
+
+        (* TRIVIA *)
+        ("Testing Trivia.get_question" >:: fun _ -> 
+          assert_equal "What is the largest planet in our solar system?"
+          (let tr = List.nth Trivia.trivia_questions 0 in Trivia.get_question tr));
+
+        ("Testing Trivia.get_answer" >:: fun _ -> 
+          assert_equal "Jupiter"
+          (let tr = List.nth Trivia.trivia_questions 0 in Trivia.get_answer tr));
+        
+        ("Testing Trivia.correct for a correct answer" >:: fun _ -> 
+          let animal = (create "Darien" "Dog") in
+          assert_equal true
+          (let tr = List.nth Trivia.trivia_questions 0 in 
+          Trivia.correct tr "Jupiter" animal);
+          assert_equal "Dog Darien has $6." (Pet.money_to_string animal));
+
+        ("Testing Trivia.correct case insensitivity" >:: fun _ -> 
+          assert_equal true
+          (let tr = List.nth Trivia.trivia_questions 0 in 
+          Trivia.correct tr "JUPITER" (create "Darien" "Dog")));
+
+        ("Testing Trivia.correct for an incorrect answer" >:: fun _ -> 
+          let animal = (create "Darien" "Dog") in
+          assert_equal false
+          (let tr = List.nth Trivia.trivia_questions 0 in 
+          Trivia.correct tr "mars" animal);
+          assert_equal "Dog Darien has $4." (Pet.money_to_string animal));
+
+        ("Testing Trivia.correct incorrect answer with a balance of $0" >:: fun _ -> 
+          let animal = (create "Darien" "Dog") in
+          Pet.set_money animal 0.;
+          assert_equal false
+          (let tr = List.nth Trivia.trivia_questions 0 in 
+          Trivia.correct tr "mars" animal);
+          assert_equal "Dog Darien has $0." (Pet.money_to_string animal));
+        
       ]
 
 let () = run_test_tt_main tests
