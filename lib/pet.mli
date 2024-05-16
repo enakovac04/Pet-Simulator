@@ -1,4 +1,4 @@
-(** Module for managing pets in a pet simulator. *)
+(* Module for managing pets in a pet simulator. *)
 
 (** type [max_vals] stores the maximum values for 
     health, happiness, and energy. *)
@@ -61,7 +61,7 @@ val money_to_string : animal -> string
 Displays the animal's level of health, happiness, energy, nutrition, and money. *)
 val status_to_string : animal -> string
 
-(** Health manipulation functions. *)
+(* Health manipulation functions. *)
 (** [increase_health] increases the health of the given [animal] by [amount]. *)
 val increase_health : animal -> int -> unit
 
@@ -79,7 +79,7 @@ val max_health : animal -> int
     the given [animal] can have by 1. *)
 val increase_max_health : animal -> unit
 
-(** Happiness manipulation functions. *)
+(* Happiness manipulation functions. *)
 (** [increase_happiness] increases the happiness of the given [animal] by [amount]. *)
 val increase_happiness : animal -> int -> unit
 
@@ -97,7 +97,7 @@ val max_happiness : animal -> int
     the given [animal] can have by 1. *)
 val increase_max_happiness : animal -> unit
 
-(** Energy manipulation functions. *)
+(* Energy manipulation functions. *)
 (** [increase_energy] increases the energy of the given [animal] by [amount]. *)
 val increase_energy : animal -> int -> unit
 
@@ -115,7 +115,7 @@ val max_energy : animal -> int
     the given [animal] can have by 1. *)
 val increase_max_energy : animal -> unit
 
-(** Nutrition manipulation functions. *)
+(* Nutrition manipulation functions. *)
 (** [increase_nutrition] increases the nutrition of the given [animal] by [amount]. *)
 val increase_nutrition : animal -> int -> unit
 
@@ -125,7 +125,7 @@ val decrease_nutrition : animal -> int -> unit
 (** [get_nutrition] returns the amount of nutrition the given [animal] has. *)
 val get_nutrition : animal -> int
 
-(** Money manipulation *)
+(* Money manipulation *)
 (** [increase_money] increases the money of the given [animal] by [amount]. *)
 val increase_money : animal -> float -> unit
 
@@ -135,7 +135,7 @@ val decrease_money : animal -> float -> unit
 (** [get_money] returns the amount of money the given [animal] has. *)
 val get_money : animal -> float
 
-(** Direct setters for pet attributes. *)
+(* Direct setters for pet attributes. *)
 (** [set_health] sets the health level of the given [animal]. *)
 val set_health : animal -> int -> unit
 
