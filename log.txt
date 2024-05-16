@@ -1,0 +1,393 @@
+commit 6c878194089701ab588452e1adc2bac99322cabe
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Thu May 16 10:55:39 2024 -0400
+
+    Fixed Vet
+
+commit 89186db893973af26b67e6350e0a58c8bf2a4466
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Thu May 16 10:11:46 2024 -0400
+
+    Added MS3 Report
+
+commit 489c472f5b4c0f95acd187ab46dfd515ba578913
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Thu May 16 10:02:06 2024 -0400
+
+    Removed duplicate trivia questions
+
+commit 0fcd6dad7a7d10f55105863362f72bf0bf38e67d
+Merge: 07e95a3 e81d5c8
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Thu May 16 10:00:01 2024 -0400
+
+    Added authoer's comment
+    Merge branch 'main' of github.coecis.cornell.edu:ehk75/cs_final
+
+commit e81d5c84afd9e6816d51c49afc87b7076839da3d
+Author: Megan <mec328@cornell.edu>
+Date:   Thu May 16 03:32:12 2024 -0400
+
+    Merged branches
+
+commit 669a91ccca3cd1b0eeb195559f4ea7e5a79b9ca7
+Merge: c01a0ae 7ab75ee
+Author: Claire McHugh <cdm234@cornell.edu>
+Date:   Thu May 16 03:17:35 2024 -0400
+
+    Debugged blackjack
+    Merge branch 'main' of github.coecis.cornell.edu:ehk75/cs-3110-final
+
+commit c01a0ae8f820eb542214aa511c76c5a8bcf80f35
+Author: Claire McHugh <cdm234@cornell.edu>
+Date:   Thu May 16 03:15:19 2024 -0400
+
+    Debugged blackjack
+
+commit 07e95a31bc4f8fa78b5941549ad5d4a69930aae7
+Merge: 16f6d1a 7ab75ee
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Thu May 16 00:17:30 2024 -0400
+
+    Added author's comment
+    Merge branch 'main' of github.coecis.cornell.edu:ehk75/cs_final
+
+commit 7ab75ee931f7fb39dab675b67cebdcd6484a72fb
+Author: Megan <mec328@cornell.edu>
+Date:   Thu May 16 00:04:36 2024 -0400
+
+    Specs in mli for coin and grid
+
+commit 16f6d1a27abb6276e651b13a5fe8c1ef02b853a3
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Wed May 15 23:33:46 2024 -0400
+
+    Added author's comment
+
+commit 5c001e9a286e714dd41724c19fdfce78de1d6e83
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Wed May 15 23:24:50 2024 -0400
+
+    Added Test Plan
+
+commit 1937c554a1fac4c688bed2232337b1566727dd87
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Wed May 15 22:27:18 2024 -0400
+
+    Added specs to pet.mli
+
+commit 5ec098a62bfb70372f2a5ccbd5bf6e20b860bc9e
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Wed May 15 22:24:46 2024 -0400
+
+    Added specifications to pet.mli
+
+commit fc7ce7dfe8017b199e7c433c5a071a4d42747c62
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Wed May 15 21:46:49 2024 -0400
+
+    Cleaned
+
+commit 815732674b6cb2feb68d29578021f72cef5d8892
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Wed May 15 21:34:14 2024 -0400
+
+    Added leash to shop, keep track of sickness, and impact of train
+
+commit f00890e2ef25b8ed3135d94d67e8522b09a4a6d6
+Author: Megan <mec328@cornell.edu>
+Date:   Wed May 15 17:20:55 2024 -0400
+
+    Cleaning up options
+
+commit 4659fbcc9b23e4b6ed94faf4b82f94d5edc4fc8a
+Author: Megan <mec328@cornell.edu>
+Date:   Wed May 15 16:40:58 2024 -0400
+
+    Update YAML File
+
+commit 6e90cda62ff1a27e5cd476525e07bd939e0b8a78
+Author: Megan <mec328@cornell.edu>
+Date:   Wed May 15 16:17:12 2024 -0400
+
+    Formatting and cleaning up little things
+    
+    - remove case sensitivity for everything except the options menu
+    - remove options we wont use
+
+commit 4d5c6843c8aca9be83a7f4632a6b16e800a3edc3
+Author: Megan <mec328@cornell.edu>
+Date:   Wed May 15 00:37:05 2024 -0400
+
+    Decrease nutrition periodically
+    
+    - and shuffle trivia questions
+
+commit 1b86d40f3e24c6ccfba2d51934de6430537b68c1
+Author: Claire McHugh <cdm234@cornell.edu>
+Date:   Tue May 14 18:43:08 2024 -0400
+
+    Implemented trivia game to earn money
+
+commit b9e6bb64e0feb1654e1f245f19d6bd9c58089458
+Author: Claire McHugh <cdm234@cornell.edu>
+Date:   Tue May 14 18:25:41 2024 -0400
+
+    Implemented blackjack game
+
+commit f77bc7c87381f8ae3a3e6084d4392fcddc66531b
+Author: Claire McHugh <cdm234@cornell.edu>
+Date:   Tue May 14 17:07:18 2024 -0400
+
+    Implemented cooking game for coins
+
+commit 16d5870b44f0ec51d26004e07de720cb9275261a
+Author: Claire McHugh <cdm234@cornell.edu>
+Date:   Tue May 14 16:12:38 2024 -0400
+
+    Implemented functionality for using money at the vet
+
+commit 2eafbef7b8d0b004b936cac59a767068883126fa
+Author: Megan <mec328@cornell.edu>
+Date:   Sun May 12 15:38:09 2024 -0400
+
+    Implemented Ride
+    
+    - also made game exit when statuses reach 0
+
+commit db6fab875a3716b59c711dd80eb212fa47ed2617
+Author: Megan <mec328@cornell.edu>
+Date:   Sun May 12 02:42:33 2024 -0400
+
+    Update help function
+
+commit e359b9f50ec9a1996314ce3560d7e9f8f43ee739
+Author: Megan <mec328@cornell.edu>
+Date:   Sun May 12 02:37:50 2024 -0400
+
+    Added minigame
+    
+    - simulation game inside of the big simulator
+    - added ml and mli files for coin and grid
+    - integrated it with the rest of the simulator
+
+commit 10b8ffe5d56898de3c9ae0ba5a986d5e5752380d
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Mon May 6 17:12:12 2024 -0400
+
+    Minor typo fix
+
+commit 69767e8fb9859e02de5bf9a435eb3f3624fb6ecf
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Mon May 6 00:04:12 2024 -0400
+
+    Implemented vet
+
+commit a295a2005f60349f743828df135b96663d337a4b
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Sun May 5 16:42:52 2024 -0400
+
+    Added more test cases
+
+commit 24a0c1c424d6aa7fe365905c0a1b26aaf88d4c02
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Sun May 5 16:09:55 2024 -0400
+
+    Added Train, Battle, Shop, and other functions
+
+commit 961dd716cadf1f4ec408b8f68552843f3dabe2b7
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Sun May 5 12:58:16 2024 -0400
+
+    Implemented a function that prints the status of the pet
+
+commit f2a14cdb88d1ede1784640d77d70590f684b1d86
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Sun May 5 12:53:44 2024 -0400
+
+    Implemented nap
+
+commit e4e5a64180211c076f20eb0ee92a9b0af73afc2f
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Sun May 5 12:37:49 2024 -0400
+
+    Implemented functions that print change in health etc.
+
+commit 6c4d9ce4986854144fac2bf775989a702715f98d
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Wed May 1 18:01:41 2024 -0400
+
+    Added more test cases
+
+commit d7d53eac4a7733645924966653f11586b93731e1
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Wed May 1 17:59:40 2024 -0400
+
+    Added test cases for every function
+
+commit 280d99e10f2195352b38d4f8de54f34f7e8fd5aa
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Wed May 1 17:18:25 2024 -0400
+
+    Implemented the clean function for animals
+
+commit 73526fb8b4d52472d8f2c7f3b9ae2379a0de6c5d
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Wed May 1 17:06:48 2024 -0400
+
+    Added a walk function for the animals
+
+commit f6a8ceb6594155cfb2731572c87ae0c10a6b8b24
+Merge: 93bdad1 6cad7d5
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Wed May 1 15:54:11 2024 -0400
+
+    Merge branch 'main' of github.coecis.cornell.edu:ehk75/cs-3110-final
+    
+    This merge needs to be committed.
+
+commit 6cad7d5b1d4942f069bc0c3bd84ead679471216e
+Author: Megan <mec328@cornell.edu>
+Date:   Thu Mar 28 21:34:24 2024 -0400
+
+    add install.txt file
+
+commit 93bdad1122e41256dbbdc46cd36cb0e47d8064c4
+Merge: 5619304 d1170e1
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Thu Mar 28 15:35:50 2024 -0400
+
+    Merge branch 'main' of github.coecis.cornell.edu:ehk75/cs-3110-final
+
+commit 5619304f71e9189dc7a446aab0225e90356e51f8
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Thu Mar 28 15:30:29 2024 -0400
+
+    Ena Kovac (ehk75) Changed decrease_health to update_health
+
+commit d1170e1b3e0ef220fa1101cb4e0928ac5f64ee91
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Thu Mar 28 00:47:00 2024 -0400
+
+    Created yaml file
+
+commit c024f6f3c00f4d04956dfe6f92c12199aca58aee
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Thu Mar 28 00:34:37 2024 -0400
+
+    Implemented play, added new mutable fields
+    
+    - implemented play with different toy options for the pet to play with some better for different types of pets
+    - added the fields happiness, energy, and nutrition
+    - made all fields but name mutable for easier implementation
+    - adapted all other functions to support this functionality
+
+commit 47325d4a953c7ae921078c3f711000d43a3f6a08
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Tue Mar 26 19:38:23 2024 -0400
+
+    Ena Kovac (ehk75) Implemented checking if the health has decreased too much
+
+commit de26c84d462e290a8307ceead0dcce2eb41ef0ec
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Mon Mar 25 21:09:26 2024 -0400
+
+    Ena Kovac (ehk75) Added Feed function -Decreases health if you feed the pet something they are allergic to
+
+commit 8028cd5eab5ea6bfaddc8a07f901c1c13cea1f45
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Mon Mar 25 15:26:22 2024 -0400
+
+    Ena Kovac (ehk75)
+    Introduced the idea of options for the pet
+
+commit 9ad66c40f2a55365ee5a4ccbf7fd1a68bd27c8c1
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Mon Mar 25 14:59:31 2024 -0400
+
+    Ena Kovac (ehk75)
+    Used new functions in command line
+    
+    - Choose the type of pet
+    - Choose the name
+    - Prints the pet
+
+commit 45ba9065c79a5cb0f5ef044a82281cd2f05754a0
+Merge: 890541c 29dd675
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Mon Mar 25 14:37:19 2024 -0400
+
+    Merge branch 'main' of github.coecis.cornell.edu:ehk75/cs-3110-final
+
+commit 890541cd935eb10c42cafccb02c2c785efe929e8
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Mon Mar 25 14:36:01 2024 -0400
+
+    Deleted print statement from bin
+
+commit 29dd675f0683e200e1d2b41bd16f44eb82332780
+Merge: ee30ca1 55b9bf1
+Author: Claire McHugh <cdm234@cornell.edu>
+Date:   Mon Mar 25 14:21:45 2024 -0400
+
+    Merge branch 'main' of github.coecis.cornell.edu:ehk75/cs-3110-final
+
+commit ee30ca1d467ee8b125b88e6b395558a46ba5f4e2
+Author: Claire McHugh <cdm234@cornell.edu>
+Date:   Mon Mar 25 14:11:06 2024 -0400
+
+    Implemented more pet.ml functions, OUnit tested them cdm234
+
+commit 55b9bf1c3b7ca4f9cd84cc4ed30ba8df1da3b9c6
+Author: Bella Falkenberg <alf253@cornell.edu>
+Date:   Mon Mar 25 11:43:53 2024 -0400
+
+    Bella Falkenberg (alf253) edited main
+    
+    - Added print "Hello" to test pushing to git
+
+commit 2aedcb454e33410e99e84729714bc4a1520c2786
+Author: Claire McHugh <cdm234@cornell.edu>
+Date:   Mon Mar 25 11:35:42 2024 -0400
+
+    Made pet.mli file with values cdm234
+
+commit 16fa00ac6556f546f1f510dbf4f0a65203b2fed2
+Author: ehk75 <ehk75@cornell.edu>
+Date:   Mon Mar 25 11:03:46 2024 -0400
+
+    Update README.md
+
+commit 3f1311ebd7acd9618528a038a367c764b46def24
+Author: ehk75 <ehk75@cornell.edu>
+Date:   Mon Mar 25 11:03:31 2024 -0400
+
+    Update README.md
+
+commit 81f73ccade3665462c277a353723591855c0bbb8
+Author: ehk75 <ehk75@cornell.edu>
+Date:   Mon Mar 25 11:03:20 2024 -0400
+
+    Update README.md
+
+commit 2cac7a7b7e6d0cebf2c79826a89629f3ede53b7f
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Mon Mar 25 11:02:32 2024 -0400
+
+    README commit
+
+commit 88c760d1e0f683e5124c51dc6bab5b1f9bb71087
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Mon Mar 25 10:54:57 2024 -0400
+
+    Ena Kovac (ehk75)
+    Added initial functionality to main
+    
+    - Ask user if they want to start the game
+    -Added .ocamlformat
+
+commit bd2c0bd96128d27745964ee5e49acc8fd73ee4b7
+Author: Ena Kovac <ehk75@cornell.edu>
+Date:   Mon Mar 25 10:47:03 2024 -0400
+
+    Initial commit
