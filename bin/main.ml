@@ -746,9 +746,6 @@ let rec cooking_challenge animal =
   | _ -> Printf.printf "Thanks for playing the Pet Cooking Challenge!\n"
 
 (* BLACKJACK --------------------------------------------*)
-
-(* BLACKJACK GAME --------------------------------------------*)
-(* NOTE a 10 has a higher probability than the rest of the numbers *)
 let play_blackjack animal bet =
   let money = Pet.get_money animal in
   if bet > money then
@@ -796,7 +793,6 @@ let play_blackjack animal bet =
           blackjack_turn hand
     in
 
-    Pet.decrease_money animal bet;
     blackjack_turn 0
   end
 
